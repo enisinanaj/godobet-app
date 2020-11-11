@@ -1,4 +1,4 @@
-package com.godobetapp;
+package com.godobet;
 
 import com.facebook.react.ReactActivity;
 

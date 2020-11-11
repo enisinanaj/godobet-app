@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "544349522367",
+    "firebase_url": "https://godobet-ac5f4.firebaseio.com",
+    "project_id": "godobet-ac5f4",
+    "storage_bucket": "godobet-ac5f4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544349522367:android:3727a88ff320bc5c27790a",
+        "android_client_info": {
+          "package_name": "com.godobet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544349522367-drtjfc0pfcn9kl1p82b1qu5f4navpugm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCta6LPs24vD8cxLvxLyKketIYya8h-4K4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544349522367-drtjfc0pfcn9kl1p82b1qu5f4navpugm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

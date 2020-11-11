@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.godobetapp",
+    package = "com.godobet",
 )
 
 android_resource(
     name = "res",
-    package = "com.godobetapp",
+    package = "com.godobet",
     res = "src/main/res",
 )
 
