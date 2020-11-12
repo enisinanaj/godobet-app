@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>544349522367-uj5hab6u0nqp3gpd5qiok2e6ebmcdq6g.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.544349522367-uj5hab6u0nqp3gpd5qiok2e6ebmcdq6g</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCx3HJZ8NCOrIaq4QquFq0SN-FinMF1qPY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>544349522367</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.newlinecode.GodobetApp</string>
+	<key>PROJECT_ID</key>
+	<string>godobet-ac5f4</string>
+	<key>STORAGE_BUCKET</key>
+	<string>godobet-ac5f4.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:544349522367:ios:a90b5fcdfebc030727790a</string>
+	<key>DATABASE_URL</key>
+	<string>https://godobet-ac5f4.firebaseio.com</string>
+</dict>
+</plist>
