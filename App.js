@@ -6,6 +6,11 @@ import {NavigationContainer} from '@react-navigation/native';
 import Routes from './src/components/Routes';
 
 class App extends React.Component {
+
+  componentDidMount() {
+    console.warn(this.props.app);
+  }
+
   render() {
     return (
       <NavigationContainer>

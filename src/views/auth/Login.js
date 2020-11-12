@@ -18,7 +18,7 @@ import {bindActionCreators} from 'redux';
 import * as actions from '../../store/actions/actions';
 
 class Login extends React.Component {
-  // Render any loading content that you like here
+  
   state = {
     email: '',
     password: '',
@@ -112,7 +112,7 @@ class Login extends React.Component {
             });
         });
 
-      //this.props.actions.userLogin(user);
+      this.props.actions.userLogin(user);
     });
   };
 
