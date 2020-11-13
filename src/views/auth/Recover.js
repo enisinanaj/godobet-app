@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import config from '../../store/config';
@@ -17,12 +18,11 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../store/actions/actions';
 
-class Login extends React.Component {
+class Recover extends React.Component {
   state = {
     email: '',
-    password: '',
-    loginLoading: false,
-    loginError: '',
+    recoverLoading: false,
+    recoverError: '',
   };
 
   componentDidMount() {
@@ -39,6 +39,14 @@ class Login extends React.Component {
     });
   }
 
+  createAlert = () =>
+    Alert.alert(
+      'Email inviata',
+      'Segui le istruzioni ricevute per email e riesegui il login',
+      [{text: 'OK'}],
+      {cancelable: false},
+    );
+
   async validateEmail(email) {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (reg.test(email) === false) {
@@ -51,73 +59,36 @@ class Login extends React.Component {
     }
   }
 
-  async validatePassword(password) {
-    if (password === '') {
-      //not correct
-      this.setState({password: password, passwordError: true});
-      return false;
-    } else {
-      //correct
-      this.setState({password: password, passwordError: false});
-    }
-  }
-
-  async loginWithEmail() {
+  async recoverPassword() {
     await this.validateEmail(this.state.email);
-    await this.validatePassword(this.state.password);
 
-    if (!this.state.emailError && !this.state.passwordError) {
-      this.setState({loginLoading: true});
+    if (!this.state.emailError) {
+      this.setState({recoverLoading: true});
+
       auth()
-        .signInWithEmailAndPassword(this.state.email, this.state.password)
-        .then((response) => {})
-        .catch((e) => {
+        .sendPasswordResetEmail(this.state.email)
+        .then(() => {
+          // Email sent.
           this.setState({
-            loginError: e.message,
-            loginLoading: false,
+            recoverError: '',
+            recoverLoading: false,
           });
+          this.createAlert();
+        })
+        .catch((error) => {
+          // An error happened.
+          this.setState({recoverError: error.message, recoverLoading: false});
         });
-      this.addUserStateChangeEvent();
     }
   }
-
-  addUserStateChangeEvent = () => {
-    auth().onAuthStateChanged((user) => {
-      if (!user) {
-        return;
-      }
-
-      TokenManager.getInstance()
-        .getToken()
-        .then((jwt) => {
-          fetch(
-            config.API_URL +
-              '/users/search/findByAccessToken/?accessToken=' +
-              user.uid,
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'X-Auth': jwt,
-              },
-            },
-          )
-            .then((e) => e.json())
-            .then((localUser) => {
-              this.props.actions.userLogin({
-                ...user,
-                ...localUser,
-              });
-            });
-        });
-
-      //this.props.actions.userLogin(user);
-    });
-  };
 
   render() {
     return (
       <View style={styles.container}>
-        <Text style={{fontSize: 18}}>Accedi a GodoBet</Text>
+        <Text style={{fontSize: 18, textAlign: 'center'}}>
+          Inserisci il tuo indirizzo email per ricevere le istruzioni su come
+          resettare il tuo account
+        </Text>
         <View
           style={{
             ...styles.inputContainer,
@@ -145,62 +116,22 @@ class Login extends React.Component {
             </Text>
           </View>
         )}
-        <View
-          style={{
-            ...styles.inputContainer,
-            borderColor: !this.state.passwordError ? '#AAA' : 'red',
-            borderWidth: !this.state.passwordError ? 0.5 : 1,
-          }}>
-          <TextInput
-            style={styles.inputStyle}
-            placeholderTextColor={'#AAA'}
-            placeholder={'Password'}
-            autoCorrect={false}
-            value={this.state.password}
-            secureTextEntry
-            onChangeText={(password) => this.validatePassword(password)}
-          />
-          <View style={styles.iconViewStyle}>
-            <Icon name="lock-closed" type="ionicon" color="#555" />
-          </View>
-        </View>
-        {this.state.passwordError && (
-          <View style={{alignItems: 'flex-start', width: '100%'}}>
-            <Text
-              style={{color: 'red', fontSize: 14, margin: 10, marginBottom: 0}}>
-              Inserisci la password
-            </Text>
-          </View>
-        )}
+
         <TouchableOpacity
           style={styles.buttonStyle}
-          disabled={this.state.loginLoading}
-          onPress={() => this.loginWithEmail()}>
-          {this.state.loginLoading ? (
+          disabled={this.state.recoverLoading}
+          onPress={() => this.recoverPassword()}>
+          {this.state.recoverLoading ? (
             <ActivityIndicator color="#FFF" />
           ) : (
-            <Text style={{fontSize: 18, color: '#FFF'}}>Login</Text>
+            <Text style={{fontSize: 18, color: '#FFF'}}>Invia</Text>
           )}
         </TouchableOpacity>
 
-        <TouchableOpacity
-          disabled={this.state.loginLoading}
-          onPress={() => this.props.navigation.navigate('Recover')}
-          style={{
-            alignItems: 'flex-end',
-            width: '100%',
-            marginTop: 20,
-          }}
-          //onPress={() => this.loginWithEmail()}
-        >
-          <Text style={{fontSize: 16, textAlign: 'right'}}>
-            Password dimenticata?
-          </Text>
-        </TouchableOpacity>
         <View style={{alignItems: 'flex-start', width: '100%'}}>
           <Text
             style={{color: 'red', fontSize: 14, margin: 10, marginBottom: 0}}>
-            {this.state.loginError}
+            {this.state.recoverError}
           </Text>
         </View>
         <View style={{marginTop: 30, alignItems: 'center'}}>
@@ -242,7 +173,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 60,
     marginTop: 30,
-    backgroundColor: '#24A0ED',
+    backgroundColor: '#d9534f',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -254,4 +185,4 @@ const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Recover);
