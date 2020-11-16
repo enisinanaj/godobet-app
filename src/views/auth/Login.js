@@ -25,20 +25,6 @@ class Login extends React.Component {
     loginError: '',
   };
 
-  componentDidMount() {
-    this.props.navigation.setOptions({
-      headerTitle: (
-        <View>
-          <Image
-            style={styles.headerImage}
-            resizeMode="contain"
-            source={require('../../../assets/images/godobet_logo.png')}
-          />
-        </View>
-      ),
-    });
-  }
-
   async validateEmail(email) {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (reg.test(email) === false) {
@@ -182,21 +168,22 @@ class Login extends React.Component {
             <Text style={{fontSize: 18, color: '#FFF'}}>Login</Text>
           )}
         </TouchableOpacity>
-
-        <TouchableOpacity
-          disabled={this.state.loginLoading}
-          onPress={() => this.props.navigation.navigate('Recover')}
+        <View
           style={{
-            alignItems: 'flex-end',
             width: '100%',
+            alignItems: 'flex-end',
             marginTop: 20,
-          }}
-          //onPress={() => this.loginWithEmail()}
-        >
-          <Text style={{fontSize: 16, textAlign: 'right'}}>
-            Password dimenticata?
-          </Text>
-        </TouchableOpacity>
+          }}>
+          <TouchableOpacity
+            disabled={this.state.loginLoading}
+            onPress={() => this.props.navigation.navigate('Recover')}
+            //onPress={() => this.loginWithEmail()}
+          >
+            <Text style={{fontSize: 16, textAlign: 'right'}}>
+              Password dimenticata?
+            </Text>
+          </TouchableOpacity>
+        </View>
         <View style={{alignItems: 'flex-start', width: '100%'}}>
           <Text
             style={{color: 'red', fontSize: 14, margin: 10, marginBottom: 0}}>

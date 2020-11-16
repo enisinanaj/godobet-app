@@ -25,20 +25,6 @@ class Recover extends React.Component {
     recoverError: '',
   };
 
-  componentDidMount() {
-    this.props.navigation.setOptions({
-      headerTitle: (
-        <View>
-          <Image
-            style={styles.headerImage}
-            resizeMode="contain"
-            source={require('../../../assets/images/godobet_logo.png')}
-          />
-        </View>
-      ),
-    });
-  }
-
   createAlert = () =>
     Alert.alert(
       'Email inviata',
