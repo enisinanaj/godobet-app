@@ -9,16 +9,17 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
-import config from '../../store/config';
+import config from '../../../store/config';
 import auth from '@react-native-firebase/auth';
-import TokenManager from '../../components/auth/TokenManager';
+import TokenManager from '../../../components/auth/TokenManager';
 import ContentLoader, {Rect} from 'react-content-loader/native';
+import HomeStackRef from '../../../components/HomeStackRef';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as actions from '../../store/actions/actions';
+import * as actions from '../../../store/actions/actions';
 
-class ServiceCard extends React.Component {
+class PoolStoryCard extends React.Component {
   state = {
     loading: true,
     noError: true,
@@ -26,37 +27,13 @@ class ServiceCard extends React.Component {
   };
 
   componentDidMount() {
-    if (this.props.serviceData) {
-      this.getServiceDetails();
+    if (this.props.poolData) {
+      this.setPoolLoaded();
     }
   }
 
-  async getServiceDetails() {
-    var token = await TokenManager.getInstance().getToken();
-    this.setState({loading: true, noErrors: true}, () => {
-      try {
-        fetch(this.props.serviceData._links.services.href, {
-          method: 'GET',
-          headers: {'Content-Type': 'application/json', 'X-Auth': token},
-        })
-          .then((response) => response.json())
-          .then((response) => {
-            if (response) {
-              console.log(JSON.stringify(response, null, 2));
-              this.setState({
-                loading: false,
-                noErrors: true,
-                service: response,
-              });
-              if (response._embedded && response._embedded.pools) {
-                this.props.addPoolsToState(response._embedded.pools);
-              }
-            }
-          });
-      } catch (error) {
-        console.log(JSON.stringify(error, null, 2));
-      }
-    });
+  setPoolLoaded() {
+    this.setState({loading: false});
   }
 
   render() {
@@ -64,42 +41,50 @@ class ServiceCard extends React.Component {
       return (
         <View style={styles.container}>
           <ContentLoader
-            height={140}
+            height={60}
             speed={1}
-            backgroundColor={'#DDD'}
+            backgroundColor={'#CCC'}
             foregroundColor={'#FFF'}
-            viewBox="0 0 380 160">
+            viewBox="0 0 380 380">
             {/* Only SVG shapes */}
-            <Rect x="-120" y="0" rx="5" ry="5" width="100%" height="35" />
+            <Rect x="0" y="0" rx="5" ry="5" width="100%" height="200" />
+            <Rect x="0" y="300" rx="5" ry="5" width="100%" height="180" />
             <Text
               style={{
-                fontSize: 26,
+                fontSize: 20,
                 fontWeight: 'bold',
                 paddingBottom: 10,
                 borderBottomWidth: 0.5,
               }}></Text>
-            <Rect x="0" y="65" rx="4" ry="4" width="100%" height="30" />
-            <Rect x="-50" y="100" rx="4" ry="4" width="100%" height="30" />
-            <Rect x="-80" y="135" rx="4" ry="4" width="100%" height="30" />
+            <Text style={{paddingTop: 5, fontSize: 16}}></Text>
           </ContentLoader>
         </View>
       );
     else
       return (
-        <View style={styles.container}>
+        <TouchableOpacity
+          style={{...styles.container, alignItems: 'center'}}
+          onPress={() =>
+            HomeStackRef.getRef().navigate('PoolDetails', {
+              poolData: this.props.poolData,
+            })
+          }>
           <Text
             style={{
-              fontSize: 26,
+              width: '100%',
+              textAlign: 'center',
+              fontSize: 20,
               fontWeight: 'bold',
               paddingBottom: 10,
               borderBottomWidth: 0.5,
             }}>
-            {this.state.service.serviceName}
+            #{this.props.poolData.id}
           </Text>
-          <Text style={{paddingTop: 10, fontSize: 20}}>
-            {this.state.service.description}
+          <Text style={{paddingTop: 5, fontSize: 16}}>
+            {this.props.poolData.events.length}{' '}
+            {this.props.poolData.events.length === 1 ? 'evento' : 'eventi'}
           </Text>
-        </View>
+        </TouchableOpacity>
       );
   }
 }
@@ -107,11 +92,13 @@ class ServiceCard extends React.Component {
 const styles = StyleSheet.create({
   headerImage: {width: 180, height: 40},
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    marginBottom: 30,
+    minWidth: 90,
+    height: 90,
+    backgroundColor: '#EEE',
     padding: 15,
-    marginHorizontal: 30,
+    marginTop: 15,
+    marginBottom: 30,
+    marginLeft: 30,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},
@@ -154,4 +141,4 @@ const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(ServiceCard);
+export default connect(mapStateToProps, mapDispatchToProps)(PoolStoryCard);

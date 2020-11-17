@@ -13,8 +13,8 @@ import config from '../../store/config';
 import auth from '@react-native-firebase/auth';
 import TokenManager from '../../components/auth/TokenManager';
 
-import PoolStories from './PoolStories';
-import ServicesList from './ServicesList';
+import PoolStories from './pools/PoolStories';
+import ServicesList from './services/ServicesList';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../store/actions/actions';
@@ -71,7 +71,7 @@ class Home extends React.Component {
   }
 
   addPoolsToState(pools) {
-    const joinedPools = this.state.pools.concat(pools);
+    let joinedPools = [...this.state.pools, ...pools];
     this.setState({pools: joinedPools});
   }
 

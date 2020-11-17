@@ -8,15 +8,10 @@ import {
   TextInput,
   ActivityIndicator,
 } from 'react-native';
-import {Icon} from 'react-native-elements';
-import config from '../../store/config';
-import auth from '@react-native-firebase/auth';
-import TokenManager from '../../components/auth/TokenManager';
-import ContentLoader, {Rect} from 'react-content-loader/native';
 import ServiceCard from './ServiceCard';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as actions from '../../store/actions/actions';
+import * as actions from '../../../store/actions/actions';
 
 class PoolStories extends React.Component {
   renderItem = ({item, index}) => (
@@ -38,7 +33,13 @@ class PoolStories extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={{fontSize: 20, fontWeight: 'bold', margin: 30}}>
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: 'bold',
+            margin: 30,
+            marginVertical: 15,
+          }}>
           I tuoi pacchetti
         </Text>
         <FlatList

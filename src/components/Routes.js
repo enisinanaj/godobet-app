@@ -1,9 +1,12 @@
 import React from 'react';
 import {View, Image} from 'react-native';
+
 import Login from '../views/auth/Login';
 import Recover from '../views/auth/Recover';
 import Profile from '../views/profile/Profile';
 import Home from '../views/home/Home';
+import ServiceDetails from '../views/home/services/ServiceDetails';
+import PoolDetails from '../views/home/pools/PoolDetails';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -46,7 +49,8 @@ const Routes = ({app}) => {
           ),
         }}>
         <HomeStack.Screen name="Home" component={Home} />
-        <HomeStack.Screen name="Profilo" component={Profile} />
+        <HomeStack.Screen name="ServiceDetails" component={ServiceDetails} />
+        <HomeStack.Screen name="PoolDetails" component={PoolDetails} />
       </HomeStack.Navigator>
     );
   }

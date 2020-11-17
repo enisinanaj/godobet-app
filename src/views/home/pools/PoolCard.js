@@ -9,78 +9,63 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
-import config from '../../store/config';
+import config from '../../../store/config';
 import auth from '@react-native-firebase/auth';
-import TokenManager from '../../components/auth/TokenManager';
+import TokenManager from '../../../components/auth/TokenManager';
 import ContentLoader, {Rect} from 'react-content-loader/native';
+import HomeStackRef from '../../../components/HomeStackRef';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as actions from '../../store/actions/actions';
+import * as actions from '../../../store/actions/actions';
 
 class PoolCard extends React.Component {
-  state = {
-    loading: true,
-    noError: true,
-    service: {},
-  };
-
   componentDidMount() {
-    if (this.props.poolData) {
-      this.setPoolLoaded();
-    }
+    //console.log(JSON.stringify(this.props.poolData, null, 2));
   }
-
-  setPoolLoaded() {
-    this.setState({loading: false});
-  }
-
   render() {
-    if (this.state.loading)
-      return (
-        <View style={styles.container}>
-          <ContentLoader
-            height={60}
-            speed={1}
-            backgroundColor={'#CCC'}
-            foregroundColor={'#FFF'}
-            viewBox="0 0 380 380">
-            {/* Only SVG shapes */}
-            <Rect x="0" y="0" rx="5" ry="5" width="100%" height="200" />
-            <Rect x="0" y="260" rx="5" ry="5" width="100%" height="150" />
-          </ContentLoader>
-        </View>
-      );
-    else
-      return (
-        <View style={{...styles.container, alignItems: 'center'}}>
+    return (
+      <TouchableOpacity
+        style={{...styles.container}}
+        onPress={() =>
+          HomeStackRef.getRef().navigate('PoolDetails', {
+            poolData: this.props.poolData,
+          })
+        }>
+        <View
+          style={{
+            flexDirection: 'row',
+            paddingBottom: 10,
+            borderBottomWidth: 0.5,
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
           <Text
             style={{
-              fontSize: 26,
+              fontSize: 20,
               fontWeight: 'bold',
-              paddingBottom: 10,
-              borderBottomWidth: 0.5,
             }}>
-            #{this.props.poolData.id}
+            {this.props.poolData.description}
           </Text>
-          <Text style={{paddingTop: 10, fontSize: 20}}>
-            {this.props.poolData.events.length}{' '}
-            {this.props.poolData.events.length === 1 ? 'evento' : 'eventi'}
-          </Text>
+          <Icon name="arrow-forward" type="ionicon" color="#555" />
         </View>
-      );
+        <Text style={{paddingTop: 5, fontSize: 16}}>
+          {this.props.poolData.events.length}{' '}
+          {this.props.poolData.events.length === 1 ? 'evento' : 'eventi'}
+        </Text>
+      </TouchableOpacity>
+    );
   }
 }
 
 const styles = StyleSheet.create({
   headerImage: {width: 180, height: 40},
   container: {
-    minWidth: 80,
-    backgroundColor: '#EEE',
-    padding: 15,
-    marginTop: 15,
+    flex: 1,
+    backgroundColor: '#fff',
     marginBottom: 30,
-    marginLeft: 30,
+    padding: 15,
+    marginHorizontal: 30,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},

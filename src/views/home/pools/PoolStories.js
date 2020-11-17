@@ -9,15 +9,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
-import config from '../../store/config';
-import auth from '@react-native-firebase/auth';
-import TokenManager from '../../components/auth/TokenManager';
-import PoolCard from './PoolCard';
-import ContentLoader, {Rect} from 'react-content-loader/native';
+import PoolStoryCard from './PoolStoryCard';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as actions from '../../store/actions/actions';
+import * as actions from '../../../store/actions/actions';
 
 class PoolStories extends React.Component {
   state = {
@@ -26,14 +22,14 @@ class PoolStories extends React.Component {
     service: {},
   };
 
-  renderItem = ({item, index}) => <PoolCard key={index} poolData={item} />;
+  renderItem = ({item, index}) => <PoolStoryCard key={index} poolData={item} />;
 
   listEmptyRenderItem = ({item}) => (
     <View style={{flexDirection: 'row', marginRight: 30}}>
-      <PoolCard key={1} />
-      <PoolCard key={2} />
-      <PoolCard key={3} />
-      <PoolCard key={4} />
+      <PoolStoryCard key={1} />
+      <PoolStoryCard key={2} />
+      <PoolStoryCard key={3} />
+      <PoolStoryCard key={4} />
     </View>
   );
 
