@@ -10,11 +10,15 @@ import {
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import TokenManager from '../../../components/auth/TokenManager';
-import ContentLoader, {Rect} from 'react-content-loader/native';
+import ContentLoader, {Rect, Circle} from 'react-content-loader/native';
 import HomeStackRef from '../../../components/HomeStackRef';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../../store/actions/actions';
+import moment from 'moment';
+import 'moment/locale/it';
+moment.locale('it');
+import ProgressCircle from 'react-native-progress-circle';
 
 class ServiceCard extends React.Component {
   state = {
@@ -40,6 +44,7 @@ class ServiceCard extends React.Component {
           .then((response) => response.json())
           .then((response) => {
             if (response) {
+              //console.log(JSON.stringify(this.props.serviceData, null, 2));
               //console.log(JSON.stringify(response, null, 2));
               this.setState({
                 loading: false,
@@ -57,6 +62,15 @@ class ServiceCard extends React.Component {
     });
   }
 
+  getDaysToNextPayment() {
+    const ultimoPagamento = moment(this.props.serviceData.lastCharge);
+    const dataScadenza = ultimoPagamento.add(
+      this.state.service.duration,
+      'days',
+    );
+    return ultimoPagamento.diff(moment().startOf('days'), 'days');
+  }
+
   render() {
     if (this.state.loading)
       return (
@@ -68,18 +82,12 @@ class ServiceCard extends React.Component {
             foregroundColor={'#FFF'}
             viewBox="0 0 400 160">
             {/* Only SVG shapes */}
-            <Rect x="-120" y="0" rx="5" ry="5" width="100%" height="35" />
-            <Text
-              style={{
-                fontSize: 22,
-                fontWeight: 'bold',
-                paddingBottom: 10,
-                borderBottomWidth: 0.5,
-              }}></Text>
-            <Rect x="0" y="65" rx="4" ry="4" width="100%" height="30" />
-            <Rect x="-50" y="100" rx="4" ry="4" width="100%" height="30" />
-            <Rect x="-80" y="135" rx="4" ry="4" width="100%" height="30" />
-            <Text style={{paddingTop: 10, fontSize: 18}}></Text>
+            <Rect x="-150" y="0" rx="5" ry="5" width="100%" height="35" />
+
+            <Rect x="-180" y="65" rx="4" ry="4" width="100%" height="30" />
+            <Rect x="-220" y="100" rx="4" ry="4" width="100%" height="30" />
+            <Rect x="-250" y="135" rx="4" ry="4" width="100%" height="30" />
+            <Circle cx="330" cy="80" r="65" />
           </ContentLoader>
         </View>
       );
@@ -87,32 +95,70 @@ class ServiceCard extends React.Component {
       return (
         <TouchableOpacity
           style={styles.container}
-          onPress={() =>
+          onPress={() => {
             HomeStackRef.getRef().navigate('ServiceDetails', {
               serviceData: this.state.service,
-            })
-          }>
+              subscriptionData: this.props.serviceData,
+            });
+          }}>
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingBottom: 10,
-              borderBottomWidth: 0.5,
+              flex: 1,
             }}>
-            <Text
-              style={{
-                fontSize: 24,
-                fontWeight: 'bold',
-              }}>
-              {this.state.service.serviceName}
-            </Text>
-            <Icon name="arrow-forward" type="ionicon" color="#555" />
+            <View style={{flexDirection: 'column', flex: 1}}>
+              <Text
+                style={{
+                  fontSize: 24,
+                  fontWeight: 'bold',
+                }}>
+                {this.state.service.serviceName}
+              </Text>
+              <Text style={{paddingTop: 10, fontSize: 20}}>
+                {this.state.service.description}
+              </Text>
+            </View>
+            <ProgressCircle
+              percent={
+                (this.getDaysToNextPayment() * 100) /
+                this.state.service.duration
+              }
+              radius={60}
+              borderWidth={14}
+              color="#57BD7D"
+              shadowColor="#D3EEDD"
+              bgColor="#fff">
+              <Text
+                style={{
+                  fontSize: 14,
+                  textAlign: 'center',
+                  padding: 2,
+                  paddingBottom: 0,
+                }}>
+                giorni
+              </Text>
+              <Text
+                style={{
+                  fontSize: 22,
+                  color: '#57BD7D',
+                  textAlign: 'center',
+                  paddingHorizontal: 5,
+                  fontWeight: 'bold',
+                }}>
+                {this.getDaysToNextPayment()}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  textAlign: 'center',
+                  padding: 2,
+                  paddingTop: 0,
+                }}>
+                al rinnovo
+              </Text>
+            </ProgressCircle>
           </View>
-
-          <Text style={{paddingTop: 10, fontSize: 20}}>
-            {this.state.service.description}
-          </Text>
         </TouchableOpacity>
       );
   }

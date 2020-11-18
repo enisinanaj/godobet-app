@@ -36,6 +36,7 @@ class PoolStories extends React.Component {
         <Text
           style={{
             fontSize: 20,
+            color: '#555',
             fontWeight: 'bold',
             margin: 30,
             marginVertical: 15,

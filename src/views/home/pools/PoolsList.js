@@ -21,6 +21,18 @@ import {bindActionCreators} from 'redux';
 import * as actions from '../../../store/actions/actions';
 
 class PoolsList extends React.Component {
+  componentDidMount() {
+    this.tabPressListener = this.props.navigation.addListener('focus', (e) => {
+      this.props.route.params.changeDetailsOnTabPress('Schedine');
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.tabPressListener !== undefined) {
+      this.tabPressListener();
+    }
+  }
+
   renderItem = ({item, index}) => <PoolCard key={index} poolData={item} />;
   render() {
     return (

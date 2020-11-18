@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
+  LogBox,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import TokenManager from '../../../components/auth/TokenManager';
 import ContentLoader, {Rect} from 'react-content-loader/native';
 import PoolsList from '../pools/PoolsList';
+import ServicePaymentsInfo from './ServicePaymentsInfo';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -21,13 +23,23 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 
 const Tab = createMaterialTopTabNavigator();
 
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
+
 class ServiceDetails extends React.Component {
-  state = {taxonomies: []};
+  state = {
+    taxonomies: [],
+    detailsType: 'Schedine',
+    taxonomiesLoaded: false,
+  };
 
   componentDidMount() {
     if (!this.props.route.params.serviceData) this.props.navigation.goBack();
-    //console.log(this.props.route.params.serviceData);
-    //this.getTaxonomies();
+    /*console.log(
+      JSON.stringify(this.props.route.params.subscriptionData, null, 2),
+    );*/
+    this.getTaxonomies();
   }
 
   async getTaxonomies() {
@@ -46,6 +58,7 @@ class ServiceDetails extends React.Component {
             }
             this.setState({
               taxonomies: arrayTaxonomies,
+              taxonomiesLoaded: true,
               taxonomiesObjects: response._embedded.taxonomy,
             });
             console.log(arrayTaxonomies);
@@ -56,20 +69,19 @@ class ServiceDetails extends React.Component {
     }
   }
 
+  changeDetailsOnTabPress(tab) {
+    this.setState({detailsType: tab});
+  }
+
   tagView(tag, index) {
     return (
       <View
         key={index}
         style={{
-          backgroundColor: 'lightblue',
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: 10,
-          padding: 7,
           marginRight: 15,
           marginTop: 15,
         }}>
-        <Text style={{fontSize: 17}}>#{tag}</Text>
+        <Text style={{fontSize: 17, color: '#555'}}>#{tag}</Text>
       </View>
     );
   }
@@ -78,21 +90,103 @@ class ServiceDetails extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.serviceDetails}>
-          <Text style={{fontSize: 24, fontWeight: 'bold'}}>
-            {this.props.route.params.serviceData.serviceName}
-          </Text>
-          <Text style={{fontSize: 18}}>
-            {this.props.route.params.serviceData.description}
-          </Text>
-          <Text style={{fontSize: 18}}>
-            {this.props.route.params.serviceData.price}€ ogni{' '}
-            {this.props.route.params.serviceData.duration} giorni
-          </Text>
-          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-            {this.state.taxonomies.map((tag, index) =>
-              this.tagView(tag, index),
-            )}
-          </View>
+          {this.state.detailsType == 'Schedine' ? (
+            <View>
+              <Text style={{fontSize: 22, fontWeight: 'bold'}}>
+                {this.props.route.params.serviceData.serviceName}
+              </Text>
+              <Text style={{fontSize: 22}}>
+                {this.props.route.params.serviceData.description}
+              </Text>
+
+              {this.state.taxonomiesLoaded ? (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                  }}>
+                  <Icon
+                    style={{marginRight: 15}}
+                    name="pricetag-outline"
+                    type="ionicon"
+                    color="#555"
+                  />
+                  <Text style={{marginTop: 15, fontSize: 17}}></Text>
+                  {this.state.taxonomies.map((tag, index) =>
+                    this.tagView(tag, index),
+                  )}
+                </View>
+              ) : (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Icon name="pricetag-outline" type="ionicon" color="#555" />
+                  <Text style={{marginTop: 15, fontSize: 17}}></Text>
+                  <ContentLoader
+                    style={{flex: 1}}
+                    speed={1}
+                    backgroundColor={'#DDD'}
+                    foregroundColor={'#FFF'}>
+                    <Rect x="10" y="6" rx="5" ry="5" width="80" height="25" />
+                    <Rect x="110" y="6" rx="5" ry="5" width="50" height="25" />
+                    <Rect x="180" y="6" rx="5" ry="5" width="40" height="25" />
+                  </ContentLoader>
+                </View>
+              )}
+            </View>
+          ) : (
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    borderRightWidth: 0.5,
+                    flex: 1,
+                  }}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Icon name="wallet-outline" type="ionicon" color="#555" />
+                    <Text style={{fontSize: 22, marginLeft: 10}}>Prezzo</Text>
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 22,
+                      fontWeight: 'bold',
+                    }}>
+                    {this.props.route.params.serviceData.price} €
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    flex: 1,
+                    alignItems: 'flex-end',
+                  }}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Icon name="time-outline" type="ionicon" color="#555" />
+                    <Text
+                      style={{
+                        fontSize: 22,
+                        marginLeft: 10,
+                        textAlign: 'right',
+                      }}>
+                      Durata
+                    </Text>
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 22,
+                      fontWeight: 'bold',
+                      textAlign: 'right',
+                    }}>
+                    {this.props.route.params.serviceData.duration} giorni
+                  </Text>
+                </View>
+              </View>
+            </View>
+          )}
         </View>
         <Tab.Navigator
           tabBarOptions={{
@@ -114,6 +208,8 @@ class ServiceDetails extends React.Component {
             name="Schedine"
             component={PoolsList}
             initialParams={{
+              changeDetailsOnTabPress: (tab) =>
+                this.changeDetailsOnTabPress(tab),
               pools: this.props.route.params.serviceData._embedded
                 ? this.props.route.params.serviceData._embedded.pools
                 : null,
@@ -121,11 +217,12 @@ class ServiceDetails extends React.Component {
           />
           <Tab.Screen
             name="Pagamenti"
-            component={PoolsList}
+            component={ServicePaymentsInfo}
             initialParams={{
-              pools: this.props.route.params.serviceData._embedded
-                ? this.props.route.params.serviceData._embedded.pools
-                : null,
+              changeDetailsOnTabPress: (tab) =>
+                this.changeDetailsOnTabPress(tab),
+              serviceData: this.props.route.params.serviceData,
+              subscriptionData: this.props.route.params.subscriptionData,
             }}
           />
         </Tab.Navigator>
