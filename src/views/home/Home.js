@@ -56,7 +56,7 @@ class Home extends React.Component {
           <MenuItem
             onPress={() => {
               this.hideMenu();
-              this.props.navigation.navigate('Impostazioni');
+              this.props.navigation.navigate('Settings');
             }}>
             Impostazioni
           </MenuItem>
@@ -151,7 +151,7 @@ class Home extends React.Component {
 
   async getMySubscriptions() {
     //this.props.app.user._links.subscriptions.href
-    console.log(JSON.stringify(this.props.app.user, null, 2));
+    //console.log(JSON.stringify(this.props.app.user, null, 2));
     var token = await TokenManager.getInstance().getToken();
     this.setState(
       {loading: true, noErrors: true, pools: [], subscriptions: []},

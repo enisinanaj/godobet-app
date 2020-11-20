@@ -13,6 +13,7 @@ import config from '../../store/config';
 import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import TokenManager from '../../components/auth/TokenManager';
+import DeviceInfo from 'react-native-device-info';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -26,28 +27,85 @@ class Login extends React.Component {
     loginError: '',
   };
 
-  async requestUserPermission() {
+  async requestUserPermissionNotifications() {
     const authStatus = await messaging().requestPermission();
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-    if (enabled) {
-      this.getNotificationToken();
+    return enabled;
+  }
+
+  async checkUserDevices(userData) {
+    const gotPermission = await this.requestUserPermissionNotifications();
+    if (gotPermission) {
+      const notificationToken = await this.getNotificationToken();
+      var token = await TokenManager.getInstance().getToken();
+      try {
+        fetch(userData._links.devices.href, {
+          method: 'GET',
+          headers: {'Content-Type': 'application/json', 'X-Auth': token},
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            this.checkDevicesList(
+              userData,
+              notificationToken,
+              response._embedded.devices,
+            );
+          });
+      } catch {
+        console.log(this.props.app);
+        this.setState({
+          loginError:
+            'Errore! Non sono riuscito a prendere la lista dei tuoi dispositivi',
+        });
+      }
+    } else {
+      this.props.actions.userLogin(userData);
     }
   }
 
-  async checkSavedNotificationToken(userData) {
-    // console.log(JSON.stringify(userData, null, 2));
-    this.props.actions.userLogin(userData);
+  async checkDevicesList(userData, notificationToken, devicesList) {
+    const tokenExists = devicesList.find(
+      (device) => device.deviceToken === notificationToken,
+    );
+
+    if (tokenExists) {
+      this.props.actions.userLogin(userData);
+    } else {
+      this.addNewDevice(userData, notificationToken);
+    }
+  }
+
+  async addNewDevice(userData, notificationToken) {
+    const device = {
+      deviceToken: notificationToken,
+      make: DeviceInfo.getBrand(),
+      build: DeviceInfo.getVersion(),
+      deviceName: DeviceInfo.getDeviceNameSync(),
+      owner: userData._links.self.href,
+    };
+    //console.log(JSON.stringify(device, null, 2));
+    var token = await TokenManager.getInstance().getToken();
+    fetch(config.API_URL + '/devices', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-Auth': token},
+      body: JSON.stringify(device),
+    })
+      .then((response) => {
+        this.props.actions.userLogin(userData);
+      })
+      .catch((error) => {
+        console.warn(error);
+        this.setState({
+          loginError: 'Errore! Non sono riuscito a salvare il tuo dispositivo',
+        });
+      });
   }
 
   async getNotificationToken() {
-    await messaging()
-      .getToken()
-      .then((token) => {
-        console.log(token);
-      });
+    return await messaging().getToken();
   }
 
   async validateEmail(email) {
@@ -114,7 +172,7 @@ class Login extends React.Component {
           )
             .then((e) => e.json())
             .then((localUser) => {
-              this.checkSavedNotificationToken({
+              this.checkUserDevices({
                 ...user,
                 ...localUser,
               });
@@ -187,6 +245,7 @@ class Login extends React.Component {
           style={styles.buttonStyle}
           disabled={this.state.loginLoading}
           onPress={() => {
+            //this.testDeviceInfo();
             this.loginWithEmail();
           }}>
           {this.state.loginLoading ? (

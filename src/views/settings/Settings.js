@@ -17,7 +17,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../store/actions/actions';
 
-class Profile extends React.Component {
+class Settings extends React.Component {
   state = {
     email: '',
     password: '',
@@ -36,7 +36,11 @@ class Profile extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={{fontSize: 26, fontWeight: 'bold'}}>Il tuo profilo</Text>
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          onPress={() => this.logout()}>
+          <Text style={{fontSize: 18, color: '#FFF'}}>Logout</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -83,4 +87,4 @@ const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);
