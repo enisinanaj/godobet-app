@@ -5,7 +5,7 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
+  Appearance,
   ActivityIndicator,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
@@ -13,7 +13,7 @@ import config from '../../store/config';
 import messaging from '@react-native-firebase/messaging';
 import TokenManager from '../../components/auth/TokenManager';
 import Menu, {MenuItem, MenuDivider} from 'react-native-material-menu';
-
+import {lightStyles, darkStyles} from '../../components/Styles';
 import PoolStories from './pools/PoolStories';
 import ServicesList from './services/ServicesList';
 import {connect} from 'react-redux';
@@ -179,6 +179,8 @@ class Home extends React.Component {
   }
 
   render() {
+    const styles =
+      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     return (
       <View style={styles.container}>
         <PoolStories pools={this.state.pools} />
@@ -191,7 +193,7 @@ class Home extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles2 = StyleSheet.create({
   headerImage: {width: 180, height: 40},
   container: {
     flex: 1,

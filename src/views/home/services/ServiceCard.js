@@ -74,7 +74,7 @@ class ServiceCard extends React.Component {
 
   render() {
     const styles =
-      Appearance.getColorScheme() === 'dark' ? darkStyles : lightStyles;
+      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     if (this.state.loading)
       return (
         <View style={styles.serviceCardContainer}>
@@ -123,9 +123,9 @@ class ServiceCard extends React.Component {
               }
               radius={60}
               borderWidth={14}
-              color="#57BD7D"
-              shadowColor="#D3EEDD"
-              bgColor={styles.cardBackground.color}>
+              color={styles.primaryColor.color}
+              shadowColor={styles.primaryColorTransparency.color}
+              bgColor={styles.cardBackground.backgroundColor}>
               <Text
                 style={{
                   ...styles.text14,

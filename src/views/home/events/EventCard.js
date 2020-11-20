@@ -36,7 +36,7 @@ class EventCard extends React.Component {
   }
   render() {
     const styles =
-      Appearance.getColorScheme() === 'dark' ? darkStyles : lightStyles;
+      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     if (!this.state.loading)
       return (
         <View style={styles.cardContainer}>

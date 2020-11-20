@@ -5,11 +5,12 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
+  Appearance,
   ActivityIndicator,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import config from '../../../store/config';
+import {lightStyles, darkStyles} from '../../../components/Styles';
 import auth from '@react-native-firebase/auth';
 import TokenManager from '../../../components/auth/TokenManager';
 import ContentLoader, {Rect} from 'react-content-loader/native';
@@ -37,9 +38,11 @@ class PoolStoryCard extends React.Component {
   }
 
   render() {
+    const styles =
+      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     if (this.state.loading)
       return (
-        <View style={styles.container}>
+        <View style={styles.storiesCardContainer}>
           <ContentLoader
             height={60}
             speed={1}
@@ -62,7 +65,7 @@ class PoolStoryCard extends React.Component {
     else
       return (
         <TouchableOpacity
-          style={{...styles.container, alignItems: 'center'}}
+          style={{...styles.storiesCardContainer, alignItems: 'center'}}
           onPress={() =>
             HomeStackRef.getRef().navigate('PoolDetails', {
               //poolUrl: 'https://godobet-api.herokuapp.com/pools/19',
@@ -73,13 +76,13 @@ class PoolStoryCard extends React.Component {
             style={{
               width: '100%',
               textAlign: 'center',
-              fontSize: 20,
+              ...styles.text20,
               fontWeight: 'bold',
               paddingBottom: 10,
             }}>
             #{this.props.poolData.id}
           </Text>
-          <Text style={{fontSize: 16}}>
+          <Text style={styles.text16}>
             {this.props.poolData.events.length}{' '}
             {this.props.poolData.events.length === 1 ? 'evento' : 'eventi'}
           </Text>
@@ -88,7 +91,7 @@ class PoolStoryCard extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles2 = StyleSheet.create({
   headerImage: {width: 180, height: 40},
   container: {
     minWidth: 90,

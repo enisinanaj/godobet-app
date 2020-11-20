@@ -4,13 +4,13 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  TouchableOpacity,
+  Appearance,
   TextInput,
   ActivityIndicator,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import PoolStoryCard from './PoolStoryCard';
-
+import {lightStyles, darkStyles} from '../../../components/Styles';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../../store/actions/actions';
@@ -34,16 +34,17 @@ class PoolStories extends React.Component {
   );
 
   render() {
+    const styles =
+      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     return (
-      <View style={styles.container}>
+      <View style={styles.storiesContainer}>
         <Text
           style={{
             marginHorizontal: 30,
             marginTop: 15,
-            fontSize: 20,
             fontWeight: 'bold',
             paddingBottom: 10,
-            color: '#555',
+            ...styles.text20,
           }}>
           Le tue schedine
         </Text>
@@ -59,7 +60,7 @@ class PoolStories extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles2 = StyleSheet.create({
   headerImage: {width: 180, height: 40},
   container: {
     backgroundColor: '#fff',

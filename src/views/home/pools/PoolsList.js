@@ -4,13 +4,13 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  TouchableOpacity,
+  Appearance,
   TextInput,
   ActivityIndicator,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import config from '../../../store/config';
-import auth from '@react-native-firebase/auth';
+import {lightStyles, darkStyles} from '../../../components/Styles';
 import TokenManager from '../../../components/auth/TokenManager';
 import ContentLoader, {Rect} from 'react-content-loader/native';
 import HomeStackRef from '../../../components/HomeStackRef';
@@ -35,8 +35,10 @@ class PoolsList extends React.Component {
 
   renderItem = ({item, index}) => <PoolCard key={index} poolData={item} />;
   render() {
+    const styles =
+      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     return (
-      <View style={styles.poolsContainer}>
+      <View style={{...styles.container, paddingTop: 30}}>
         {this.props.route.params.pools ? (
           <View>
             <FlatList
@@ -63,7 +65,7 @@ class PoolsList extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles2 = StyleSheet.create({
   headerImage: {width: 180, height: 40},
   container: {
     flex: 1,

@@ -25,6 +25,7 @@
     "react-content-loader": "^5.1.4",
     "react-devtools": "^4.9.0",
     "react-native": "0.63.3",
+    "react-native-appearance": "^0.3.4",
     "react-native-device-info": "^7.1.0",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-gesture-handler": "^1.8.0",

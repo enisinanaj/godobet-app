@@ -4,11 +4,12 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  TouchableOpacity,
+  Appearance,
   TextInput,
   ActivityIndicator,
 } from 'react-native';
 import ServiceCard from './ServiceCard';
+import {lightStyles, darkStyles} from '../../../components/Styles';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../../store/actions/actions';
@@ -31,6 +32,8 @@ class PoolStories extends React.Component {
   );
 
   render() {
+    const styles =
+      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     return (
       <View style={styles.container}>
         <Text
@@ -54,7 +57,7 @@ class PoolStories extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const style2s = StyleSheet.create({
   headerImage: {width: 180, height: 40},
   container: {flex: 1},
   inputContainer: {

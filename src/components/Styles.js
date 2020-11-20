@@ -5,7 +5,16 @@ const darkText = '#CCC';
 
 const lightStyles = StyleSheet.create({
   cardBackground: {
-    color: '#FFF',
+    backgroundColor: '#FFF',
+  },
+  background: {
+    color: '#DDD',
+  },
+  primaryColor: {
+    color: '#57BD7D',
+  },
+  primaryColorTransparency: {
+    color: '#D3EEDD',
   },
   container: {
     backgroundColor: '#DDD',
@@ -16,6 +25,31 @@ const lightStyles = StyleSheet.create({
     marginBottom: 30,
     padding: 15,
     marginHorizontal: 30,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  storiesContainer: {
+    backgroundColor: '#fff',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  storiesCardContainer: {
+    minWidth: 90,
+    height: 90,
+    backgroundColor: '#F0F0F0',
+    padding: 15,
+    marginTop: 15,
+    marginBottom: 30,
+    marginLeft: 30,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},
@@ -35,6 +69,22 @@ const lightStyles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 5,
   },
+  cardPaymentsInfo: {
+    backgroundColor: '#FFF',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  serviceDetails: {
+    padding: 30,
+    paddingBottom: 15,
+    backgroundColor: '#fff',
+  },
   text14: {
     fontSize: 14,
     color: lightText,
@@ -45,6 +95,10 @@ const lightStyles = StyleSheet.create({
   },
   text18: {
     fontSize: 18,
+    color: lightText,
+  },
+  text20: {
+    fontSize: 20,
     color: lightText,
   },
   bold: {fontWeight: 'bold'},
@@ -93,7 +147,16 @@ const lightStyles = StyleSheet.create({
 
 const darkStyles = StyleSheet.create({
   cardBackground: {
-    color: '#222',
+    backgroundColor: '#222',
+  },
+  background: {
+    color: '#000',
+  },
+  primaryColor: {
+    color: '#57BD7D',
+  },
+  primaryColorTransparency: {
+    color: '#1D492D',
   },
   container: {
     backgroundColor: '#000',
@@ -104,6 +167,31 @@ const darkStyles = StyleSheet.create({
     marginBottom: 30,
     padding: 15,
     marginHorizontal: 30,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  storiesContainer: {
+    backgroundColor: '#222',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  storiesCardContainer: {
+    minWidth: 90,
+    height: 90,
+    backgroundColor: '#000',
+    padding: 15,
+    marginTop: 15,
+    marginBottom: 30,
+    marginLeft: 30,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},
@@ -123,6 +211,22 @@ const darkStyles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 5,
   },
+  cardPaymentsInfo: {
+    backgroundColor: '#222',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  serviceDetails: {
+    padding: 30,
+    paddingBottom: 15,
+    backgroundColor: '#222',
+  },
   text14: {
     fontSize: 14,
     color: darkText,
@@ -133,6 +237,10 @@ const darkStyles = StyleSheet.create({
   },
   text18: {
     fontSize: 18,
+    color: darkText,
+  },
+  text20: {
+    fontSize: 20,
     color: darkText,
   },
   bold: {fontWeight: 'bold'},

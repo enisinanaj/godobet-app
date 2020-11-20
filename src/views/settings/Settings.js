@@ -33,6 +33,10 @@ class Settings extends React.Component {
       });
   }
 
+  setTheme(theme) {
+    this.props.actions.appTheme(theme);
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -40,6 +44,21 @@ class Settings extends React.Component {
           style={styles.buttonStyle}
           onPress={() => this.logout()}>
           <Text style={{fontSize: 18, color: '#FFF'}}>Logout</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          onPress={() => this.setTheme('dark')}>
+          <Text style={{fontSize: 18, color: '#FFF'}}>Tema nero</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          onPress={() => this.setTheme('light')}>
+          <Text style={{fontSize: 18, color: '#FFF'}}>Tema chiaro</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          onPress={() => this.setTheme('device')}>
+          <Text style={{fontSize: 18, color: '#FFF'}}>Tema default</Text>
         </TouchableOpacity>
       </View>
     );

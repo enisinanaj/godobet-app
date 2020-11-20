@@ -14,10 +14,10 @@ import {createStackNavigator} from '@react-navigation/stack';
 const LoginStack = createStackNavigator();
 const HomeStack = createStackNavigator();
 
-const Routes = ({app}) => {
-  const styles =
-    Appearance.getColorScheme() === 'dark' ? darkStyles : lightStyles;
-  if (!app.loggedIn) {
+const Routes = ({props}) => {
+  console.warn(props);
+  const styles = props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+  if (!props.app.loggedIn) {
     return (
       <LoginStack.Navigator
         initialRouteName="Login"

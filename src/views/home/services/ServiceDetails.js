@@ -4,13 +4,14 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  TouchableOpacity,
+  Appearance,
   TextInput,
   ActivityIndicator,
   LogBox,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import TokenManager from '../../../components/auth/TokenManager';
+import {lightStyles, darkStyles} from '../../../components/Styles';
 import ContentLoader, {Rect} from 'react-content-loader/native';
 import PoolsList from '../pools/PoolsList';
 import ServicePaymentsInfo from './ServicePaymentsInfo';
@@ -81,21 +82,23 @@ class ServiceDetails extends React.Component {
           marginRight: 15,
           marginTop: 15,
         }}>
-        <Text style={{fontSize: 17, color: '#555'}}>#{tag}</Text>
+        <Text style={{fontSize: 16, color: '#555'}}>#{tag}</Text>
       </View>
     );
   }
 
   render() {
+    const styles =
+      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     return (
       <View style={styles.container}>
         <View style={styles.serviceDetails}>
           {this.state.detailsType == 'Schedine' ? (
             <View>
-              <Text style={{fontSize: 22, fontWeight: 'bold'}}>
+              <Text style={{...styles.title, marginBottom: 0}}>
                 {this.props.route.params.serviceData.serviceName}
               </Text>
-              <Text style={{fontSize: 22}}>
+              <Text style={styles.subtitle}>
                 {this.props.route.params.serviceData.description}
               </Text>
 
@@ -110,16 +113,20 @@ class ServiceDetails extends React.Component {
                     style={{marginRight: 15}}
                     name="pricetag-outline"
                     type="ionicon"
-                    color="#555"
+                    color={styles.icon.color}
                   />
-                  <Text style={{marginTop: 15, fontSize: 17}}></Text>
+                  <Text style={{marginTop: 15, fontSize: 16}}></Text>
                   {this.state.taxonomies.map((tag, index) =>
                     this.tagView(tag, index),
                   )}
                 </View>
               ) : (
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Icon name="pricetag-outline" type="ionicon" color="#555" />
+                  <Icon
+                    name="pricetag-outline"
+                    type="ionicon"
+                    color={styles.icon.color}
+                  />
                   <Text style={{marginTop: 15, fontSize: 17}}></Text>
                   <ContentLoader
                     style={{flex: 1}}
@@ -147,12 +154,18 @@ class ServiceDetails extends React.Component {
                     flex: 1,
                   }}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Icon name="wallet-outline" type="ionicon" color="#555" />
-                    <Text style={{fontSize: 22, marginLeft: 10}}>Prezzo</Text>
+                    <Icon
+                      name="wallet-outline"
+                      type="ionicon"
+                      color={styles.icon.color}
+                    />
+                    <Text style={{...styles.text20, marginLeft: 10}}>
+                      Prezzo
+                    </Text>
                   </View>
                   <Text
                     style={{
-                      fontSize: 22,
+                      ...styles.text20,
                       fontWeight: 'bold',
                     }}>
                     {this.props.route.params.serviceData.price} €
@@ -165,10 +178,14 @@ class ServiceDetails extends React.Component {
                     alignItems: 'flex-end',
                   }}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Icon name="time-outline" type="ionicon" color="#555" />
+                    <Icon
+                      name="time-outline"
+                      type="ionicon"
+                      color={styles.icon.color}
+                    />
                     <Text
                       style={{
-                        fontSize: 22,
+                        ...styles.text20,
                         marginLeft: 10,
                         textAlign: 'right',
                       }}>
@@ -177,7 +194,7 @@ class ServiceDetails extends React.Component {
                   </View>
                   <Text
                     style={{
-                      fontSize: 22,
+                      ...styles.text20,
                       fontWeight: 'bold',
                       textAlign: 'right',
                     }}>
@@ -191,6 +208,7 @@ class ServiceDetails extends React.Component {
         <Tab.Navigator
           tabBarOptions={{
             style: {
+              ...styles.cardBackground,
               borderBottomLeftRadius: 20,
               borderBottomRightRadius: 20,
               overflow: 'hidden',
@@ -198,10 +216,10 @@ class ServiceDetails extends React.Component {
             labelStyle: {
               fontSize: 16,
             },
-            activeTintColor: '#57BD7D',
+            activeTintColor: styles.primaryColor.color,
             inactiveTintColor: 'grey',
             indicatorStyle: {
-              backgroundColor: '#57BD7D',
+              backgroundColor: styles.primaryColor.color,
             },
           }}>
           <Tab.Screen
@@ -230,7 +248,7 @@ class ServiceDetails extends React.Component {
     );
   }
 }
-const styles = StyleSheet.create({
+const styles2 = StyleSheet.create({
   headerImage: {width: 180, height: 40},
   serviceDetails: {
     padding: 30,

@@ -2,7 +2,7 @@ import React from 'react';
 import {
   View,
   Text,
-  FlatList,
+  Appearance,
   StyleSheet,
   TouchableOpacity,
   TextInput,
@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import config from '../../../store/config';
-import auth from '@react-native-firebase/auth';
+import {lightStyles, darkStyles} from '../../../components/Styles';
 import TokenManager from '../../../components/auth/TokenManager';
 import ContentLoader, {Rect} from 'react-content-loader/native';
 import HomeStackRef from '../../../components/HomeStackRef';
@@ -24,9 +24,11 @@ class PoolCard extends React.Component {
     //console.log(JSON.stringify(this.props.poolData, null, 2));
   }
   render() {
+    const styles =
+      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     return (
       <TouchableOpacity
-        style={{...styles.container}}
+        style={styles.serviceCardContainer}
         onPress={() =>
           HomeStackRef.getRef().navigate('PoolDetails', {
             poolData: this.props.poolData,
@@ -41,14 +43,14 @@ class PoolCard extends React.Component {
           }}>
           <Text
             style={{
-              fontSize: 20,
+              ...styles.text20,
               fontWeight: 'bold',
             }}>
             {this.props.poolData.description}
           </Text>
-          <Icon name="arrow-forward" type="ionicon" color="#555" />
+          <Icon name="arrow-forward" type="ionicon" color={styles.icon.color} />
         </View>
-        <Text style={{paddingTop: 5, fontSize: 18}}>
+        <Text style={{paddingTop: 5, ...styles.text18}}>
           {this.props.poolData.events.length}{' '}
           {this.props.poolData.events.length === 1 ? 'evento' : 'eventi'}
         </Text>
@@ -57,7 +59,7 @@ class PoolCard extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles2 = StyleSheet.create({
   headerImage: {width: 180, height: 40},
   container: {
     flex: 1,

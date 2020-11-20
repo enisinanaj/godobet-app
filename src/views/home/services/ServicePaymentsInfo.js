@@ -4,7 +4,7 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  TouchableOpacity,
+  Appearance,
   TextInput,
   ActivityIndicator,
 } from 'react-native';
@@ -12,6 +12,7 @@ import {
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../../store/actions/actions';
+import {lightStyles, darkStyles} from '../../../components/Styles';
 import moment from 'moment';
 import 'moment/locale/it';
 moment.locale('it');
@@ -45,11 +46,13 @@ class ServicePaymentsInfo extends React.Component {
   }
 
   render() {
+    const styles =
+      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     return (
-      <View style={styles.container}>
-        <View style={styles.card}>
-          <Text style={{fontSize: 18}}>Ultimo pagamento</Text>
-          <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+      <View style={{...styles.container, padding: 30}}>
+        <View style={styles.cardPaymentsInfo}>
+          <Text style={styles.text18}>Ultimo pagamento</Text>
+          <Text style={{...styles.text18, fontWeight: 'bold'}}>
             {moment(this.props.route.params.subscriptionData.lastCharge).format(
               'DD-MM-YYYY HH:mm',
             )}
@@ -61,9 +64,9 @@ class ServicePaymentsInfo extends React.Component {
             </Text>
           </Text>
         </View>
-        <View style={styles.card}>
-          <Text style={{fontSize: 18}}>Scadenza</Text>
-          <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+        <View style={styles.cardPaymentsInfo}>
+          <Text style={styles.text18}>Scadenza</Text>
+          <Text style={{...styles.text18, fontWeight: 'bold'}}>
             {moment(this.getDataScadenza()).format('DD-MM-YYYY HH:mm')}
             <Text style={{fontSize: 18, fontWeight: 'normal'}}>
               {' - '}
@@ -80,7 +83,7 @@ class ServicePaymentsInfo extends React.Component {
                 height: 15,
                 borderTopLeftRadius: 7,
                 borderBottomLeftRadius: 7,
-                backgroundColor: '#57BD7D',
+                backgroundColor: styles.primaryColor.color,
               }}
             />
             <View
@@ -92,7 +95,7 @@ class ServicePaymentsInfo extends React.Component {
                 height: 15,
                 borderTopRightRadius: 7,
                 borderBottomRightRadius: 7,
-                backgroundColor: '#D3EEDD',
+                backgroundColor: styles.primaryColorTransparency.color,
               }}
             />
           </View>
@@ -102,7 +105,7 @@ class ServicePaymentsInfo extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles2 = StyleSheet.create({
   container: {
     margin: 30,
   },

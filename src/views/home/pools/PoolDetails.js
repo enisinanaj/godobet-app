@@ -118,7 +118,7 @@ class PoolDetails extends React.Component {
 
   render() {
     const styles =
-      Appearance.getColorScheme() === 'dark' ? darkStyles : lightStyles;
+      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     return (
       <View style={styles.container}>
         <View style={styles.poolDetails}>
