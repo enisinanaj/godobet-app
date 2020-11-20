@@ -3,7 +3,7 @@ import {
   View,
   Text,
   FlatList,
-  StyleSheet,
+  Appearance,
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
@@ -12,7 +12,7 @@ import {Icon} from 'react-native-elements';
 import TokenManager from '../../../components/auth/TokenManager';
 import ContentLoader, {Rect, Circle} from 'react-content-loader/native';
 import PoolCard from '../pools/PoolCard';
-
+import {lightStyles, darkStyles} from '../../../components/Styles';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../../store/actions/actions';
@@ -117,15 +117,14 @@ class PoolDetails extends React.Component {
   );
 
   render() {
+    const styles =
+      Appearance.getColorScheme() === 'dark' ? darkStyles : lightStyles;
     return (
       <View style={styles.container}>
         <View style={styles.poolDetails}>
           {!this.state.loading ? (
             <View>
-              <Text
-                style={{fontSize: 22, fontWeight: 'bold', marginBottom: 10}}>
-                {this.state.pool.description}
-              </Text>
+              <Text style={styles.title}>{this.state.pool.description}</Text>
               <View
                 style={{
                   flexDirection: 'row',
@@ -135,12 +134,16 @@ class PoolDetails extends React.Component {
                 }}>
                 <View style={{flexDirection: 'column'}}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Icon name="book-outline" type="ionicon" color="#555" />
-                    <Text style={{fontSize: 18, marginLeft: 10}}>
+                    <Icon
+                      name="book-outline"
+                      type="ionicon"
+                      color={styles.icon.color}
+                    />
+                    <Text style={{...styles.text18, marginLeft: 10}}>
                       Bookmaker
                     </Text>
                   </View>
-                  <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                  <Text style={{...styles.text18, ...styles.bold}}>
                     {this.state.pool.bookmaker}
                   </Text>
                 </View>
@@ -149,14 +152,16 @@ class PoolDetails extends React.Component {
                     <Icon
                       name="analytics-outline"
                       type="ionicon"
-                      color="#555"
+                      color={styles.icon.color}
                     />
-                    <Text style={{fontSize: 18, marginLeft: 10}}>Quota</Text>
+                    <Text style={{...styles.text18, marginLeft: 10}}>
+                      Quota
+                    </Text>
                   </View>
                   <Text
                     style={{
-                      fontSize: 18,
-                      fontWeight: 'bold',
+                      ...styles.text18,
+                      ...styles.bold,
                       textAlign: 'right',
                     }}>
                     {this.state.pool.quote}
@@ -177,23 +182,31 @@ class PoolDetails extends React.Component {
                     <Icon
                       name="pie-chart-outline"
                       type="ionicon"
-                      color="#555"
+                      color={styles.icon.color}
                     />
-                    <Text style={{fontSize: 18, marginLeft: 10}}>Stake</Text>
+                    <Text style={{...styles.text18, marginLeft: 10}}>
+                      Stake
+                    </Text>
                   </View>
-                  <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                  <Text style={{...styles.text18, ...styles.bold}}>
                     {this.state.pool.stake}
                   </Text>
                 </View>
                 <View style={{flexDirection: 'column'}}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Icon name="trophy-outline" type="ionicon" color="#555" />
-                    <Text style={{fontSize: 18, marginLeft: 10}}>Profitto</Text>
+                    <Icon
+                      name="trophy-outline"
+                      type="ionicon"
+                      color={styles.icon.color}
+                    />
+                    <Text style={{...styles.text18, marginLeft: 10}}>
+                      Profitto
+                    </Text>
                   </View>
                   <Text
                     style={{
-                      fontSize: 18,
-                      fontWeight: 'bold',
+                      ...styles.text18,
+                      ...styles.bold,
                       textAlign: 'right',
                     }}>
                     {this.state.pool.profit}
@@ -232,11 +245,11 @@ class PoolDetails extends React.Component {
                   <View style={{flexDirection: 'column'}}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Icon name="book-outline" type="ionicon" color="#555" />
-                      <Text style={{fontSize: 18, marginLeft: 10}}>
+                      <Text style={{...styles.text18, marginLeft: 10}}>
                         Bookmaker
                       </Text>
                     </View>
-                    <Text style={{fontSize: 18, fontWeight: 'bold'}}></Text>
+                    <Text style={{...styles.text18, ...styles.bold}}></Text>
                   </View>
                   <View style={{flexDirection: 'column'}}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -245,12 +258,14 @@ class PoolDetails extends React.Component {
                         type="ionicon"
                         color="#555"
                       />
-                      <Text style={{fontSize: 18, marginLeft: 10}}>Quota</Text>
+                      <Text style={{...styles.text18, marginLeft: 10}}>
+                        Quota
+                      </Text>
                     </View>
                     <Text
                       style={{
-                        fontSize: 18,
-                        fontWeight: 'bold',
+                        ...styles.text18,
+                        ...styles.bold,
                         textAlign: 'right',
                       }}></Text>
                   </View>
@@ -271,21 +286,23 @@ class PoolDetails extends React.Component {
                         type="ionicon"
                         color="#555"
                       />
-                      <Text style={{fontSize: 18, marginLeft: 10}}>Stake</Text>
+                      <Text style={{...styles.text18, marginLeft: 10}}>
+                        Stake
+                      </Text>
                     </View>
-                    <Text style={{fontSize: 18, fontWeight: 'bold'}}></Text>
+                    <Text style={{...styles.text18, ...styles.bold}}></Text>
                   </View>
                   <View style={{flexDirection: 'column'}}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Icon name="trophy-outline" type="ionicon" color="#555" />
-                      <Text style={{fontSize: 18, marginLeft: 10}}>
+                      <Text style={{...styles.text18, marginLeft: 10}}>
                         Profitto
                       </Text>
                     </View>
                     <Text
                       style={{
-                        fontSize: 18,
-                        fontWeight: 'bold',
+                        ...styles.text18,
+                        ...styles.bold,
                         textAlign: 'right',
                       }}></Text>
                   </View>
@@ -294,30 +311,12 @@ class PoolDetails extends React.Component {
             </View>
           )}
         </View>
-        <View style={styles.eventsContainer}>
+        <View style={styles.container}>
           {!this.state.eventsLoading && this.state.events.length === 0 ? (
-            <Text
-              style={{
-                margin: 30,
-                marginVertical: 15,
-                fontSize: 18,
-                fontWeight: 'bold',
-                color: '#555',
-              }}>
-              Nessun evento presente
-            </Text>
+            <Text style={styles.menuText}>Nessun evento presente</Text>
           ) : (
             <View>
-              <Text
-                style={{
-                  margin: 30,
-                  marginVertical: 15,
-                  fontSize: 18,
-                  fontWeight: 'bold',
-                  color: '#555',
-                }}>
-                Eventi
-              </Text>
+              <Text style={styles.menuText}>Eventi</Text>
               <FlatList
                 data={this.state.events}
                 renderItem={this.renderItem}
@@ -331,45 +330,6 @@ class PoolDetails extends React.Component {
     );
   }
 }
-const styles = StyleSheet.create({
-  headerImage: {width: 180, height: 40},
-  poolDetails: {
-    padding: 30,
-    backgroundColor: '#fff',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
-  },
-  container: {
-    flex: 1,
-  },
-  eventsContainer: {
-    flex: 1,
-  },
-  inputStyle: {
-    flex: 1,
-    height: 60,
-    padding: 15,
-    paddingRight: 0,
-    fontSize: 18,
-    justifyContent: 'center',
-    fontWeight: 'bold',
-  },
-  buttonStyle: {
-    width: '100%',
-    height: 60,
-    marginTop: 30,
-    backgroundColor: '#24A0ED',
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconViewStyle: {margin: 15},
-});
 
 const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => ({

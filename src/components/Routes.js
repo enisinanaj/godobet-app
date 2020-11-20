@@ -1,13 +1,13 @@
 import React from 'react';
-import {View, Image} from 'react-native';
+import {View, Image, Appearance} from 'react-native';
 
 import Login from '../views/auth/Login';
 import Recover from '../views/auth/Recover';
-import Profile from '../views/profile/Profile';
 import Home from '../views/home/Home';
 import ServiceDetails from '../views/home/services/ServiceDetails';
 import PoolDetails from '../views/home/pools/PoolDetails';
 import Settings from '../views/settings/Settings';
+import {lightStyles, darkStyles} from './Styles';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -15,6 +15,8 @@ const LoginStack = createStackNavigator();
 const HomeStack = createStackNavigator();
 
 const Routes = ({app}) => {
+  const styles =
+    Appearance.getColorScheme() === 'dark' ? darkStyles : lightStyles;
   if (!app.loggedIn) {
     return (
       <LoginStack.Navigator
@@ -39,6 +41,8 @@ const Routes = ({app}) => {
       <HomeStack.Navigator
         initialRouteName="Home"
         screenOptions={{
+          headerStyle: styles.headerBackground,
+          headerTintColor: styles.headerTint.color,
           headerTitle: (
             <View>
               <Image

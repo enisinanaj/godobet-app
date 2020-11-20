@@ -5,10 +5,11 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
+  Appearance,
   ActivityIndicator,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
+import {lightStyles, darkStyles} from '../../../components/Styles';
 import TokenManager from '../../../components/auth/TokenManager';
 import ContentLoader, {Rect, Circle} from 'react-content-loader/native';
 import HomeStackRef from '../../../components/HomeStackRef';
@@ -72,9 +73,11 @@ class ServiceCard extends React.Component {
   }
 
   render() {
+    const styles =
+      Appearance.getColorScheme() === 'dark' ? darkStyles : lightStyles;
     if (this.state.loading)
       return (
-        <View style={styles.container}>
+        <View style={styles.serviceCardContainer}>
           <ContentLoader
             height={120}
             speed={1}
@@ -94,7 +97,7 @@ class ServiceCard extends React.Component {
     else
       return (
         <TouchableOpacity
-          style={styles.container}
+          style={styles.serviceCardContainer}
           onPress={() => {
             HomeStackRef.getRef().navigate('ServiceDetails', {
               serviceData: this.state.service,
@@ -108,14 +111,8 @@ class ServiceCard extends React.Component {
               flex: 1,
             }}>
             <View style={{flexDirection: 'column', flex: 1}}>
-              <Text
-                style={{
-                  fontSize: 24,
-                  fontWeight: 'bold',
-                }}>
-                {this.state.service.serviceName}
-              </Text>
-              <Text style={{paddingTop: 10, fontSize: 20}}>
+              <Text style={styles.title}>{this.state.service.serviceName}</Text>
+              <Text style={styles.subtitle}>
                 {this.state.service.description}
               </Text>
             </View>
@@ -128,10 +125,10 @@ class ServiceCard extends React.Component {
               borderWidth={14}
               color="#57BD7D"
               shadowColor="#D3EEDD"
-              bgColor="#fff">
+              bgColor={styles.cardBackground.color}>
               <Text
                 style={{
-                  fontSize: 14,
+                  ...styles.text14,
                   textAlign: 'center',
                   padding: 2,
                   paddingBottom: 0,
@@ -150,6 +147,7 @@ class ServiceCard extends React.Component {
               </Text>
               <Text
                 style={{
+                  ...styles.text14,
                   fontSize: 14,
                   textAlign: 'center',
                   padding: 2,
@@ -159,7 +157,11 @@ class ServiceCard extends React.Component {
               </Text>
             </ProgressCircle>
             <View style={{height: '100%'}}>
-              <Icon name="arrow-forward" type="ionicon" color="#555" />
+              <Icon
+                name="arrow-forward"
+                type="ionicon"
+                color={styles.icon.color}
+              />
             </View>
           </View>
         </TouchableOpacity>
@@ -167,7 +169,7 @@ class ServiceCard extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles2 = StyleSheet.create({
   headerImage: {width: 180, height: 40},
   container: {
     flex: 1,
