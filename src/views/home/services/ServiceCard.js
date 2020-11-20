@@ -82,12 +82,12 @@ class ServiceCard extends React.Component {
             foregroundColor={'#FFF'}
             viewBox="0 0 400 160">
             {/* Only SVG shapes */}
-            <Rect x="-150" y="0" rx="5" ry="5" width="100%" height="35" />
+            <Rect x="-180" y="0" rx="5" ry="5" width="100%" height="35" />
 
-            <Rect x="-180" y="65" rx="4" ry="4" width="100%" height="30" />
+            <Rect x="-200" y="65" rx="4" ry="4" width="100%" height="30" />
             <Rect x="-220" y="100" rx="4" ry="4" width="100%" height="30" />
-            <Rect x="-250" y="135" rx="4" ry="4" width="100%" height="30" />
-            <Circle cx="330" cy="80" r="65" />
+            <Rect x="-270" y="135" rx="4" ry="4" width="100%" height="30" />
+            <Circle cx="310" cy="80" r="65" />
           </ContentLoader>
         </View>
       );
@@ -158,6 +158,9 @@ class ServiceCard extends React.Component {
                 al rinnovo
               </Text>
             </ProgressCircle>
+            <View style={{height: '100%'}}>
+              <Icon name="arrow-forward" type="ionicon" color="#555" />
+            </View>
           </View>
         </TouchableOpacity>
       );

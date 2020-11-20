@@ -21,9 +21,8 @@ class ServicePaymentsInfo extends React.Component {
     this.tabPressListener = this.props.navigation.addListener('focus', (e) => {
       this.props.route.params.changeDetailsOnTabPress('Pagamenti');
     });
-    console.log(this.props.route.params);
+    //console.log(this.props.route.params);
   }
-  datafinta = moment('14-11-2020 14:36').format('DD-MM-YYYY HH:mm');
 
   componentWillUnmount() {
     if (this.tabPressListener !== undefined) {

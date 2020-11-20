@@ -43,7 +43,7 @@ class PoolStories extends React.Component {
             fontSize: 20,
             fontWeight: 'bold',
             paddingBottom: 10,
-            borderBottomWidth: 0.5,
+            color: '#555',
           }}>
           Le tue schedine
         </Text>

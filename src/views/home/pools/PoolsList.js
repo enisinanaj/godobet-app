@@ -49,9 +49,11 @@ class PoolsList extends React.Component {
           <Text
             style={{
               margin: 30,
-              marginTop: 15,
+              marginBottom: 15,
+              marginTop: 0,
               fontSize: 18,
               fontWeight: 'bold',
+              color: '#555',
             }}>
             Nessuna schedina presente
           </Text>

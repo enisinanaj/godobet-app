@@ -11,6 +11,7 @@ import {
 import {Icon} from 'react-native-elements';
 import config from '../../store/config';
 import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 import TokenManager from '../../components/auth/TokenManager';
 
 import {connect} from 'react-redux';
@@ -24,6 +25,30 @@ class Login extends React.Component {
     loginLoading: false,
     loginError: '',
   };
+
+  async requestUserPermission() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      this.getNotificationToken();
+    }
+  }
+
+  async checkSavedNotificationToken(userData) {
+    // console.log(JSON.stringify(userData, null, 2));
+    this.props.actions.userLogin(userData);
+  }
+
+  async getNotificationToken() {
+    await messaging()
+      .getToken()
+      .then((token) => {
+        console.log(token);
+      });
+  }
 
   async validateEmail(email) {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -89,7 +114,7 @@ class Login extends React.Component {
           )
             .then((e) => e.json())
             .then((localUser) => {
-              this.props.actions.userLogin({
+              this.checkSavedNotificationToken({
                 ...user,
                 ...localUser,
               });
@@ -161,7 +186,9 @@ class Login extends React.Component {
         <TouchableOpacity
           style={styles.buttonStyle}
           disabled={this.state.loginLoading}
-          onPress={() => this.loginWithEmail()}>
+          onPress={() => {
+            this.loginWithEmail();
+          }}>
           {this.state.loginLoading ? (
             <ActivityIndicator color="#FFF" />
           ) : (
@@ -176,9 +203,7 @@ class Login extends React.Component {
           }}>
           <TouchableOpacity
             disabled={this.state.loginLoading}
-            onPress={() => this.props.navigation.navigate('Recover')}
-            //onPress={() => this.loginWithEmail()}
-          >
+            onPress={() => this.props.navigation.navigate('Recover')}>
             <Text style={{fontSize: 16, textAlign: 'right'}}>
               Password dimenticata?
             </Text>

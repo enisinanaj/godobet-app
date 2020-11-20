@@ -54,7 +54,6 @@ class PoolStoryCard extends React.Component {
                 fontSize: 20,
                 fontWeight: 'bold',
                 paddingBottom: 10,
-                borderBottomWidth: 0.5,
               }}></Text>
             <Text style={{paddingTop: 5, fontSize: 16}}></Text>
           </ContentLoader>
@@ -66,6 +65,7 @@ class PoolStoryCard extends React.Component {
           style={{...styles.container, alignItems: 'center'}}
           onPress={() =>
             HomeStackRef.getRef().navigate('PoolDetails', {
+              //poolUrl: 'https://godobet-api.herokuapp.com/pools/19',
               poolData: this.props.poolData,
             })
           }>
@@ -76,11 +76,10 @@ class PoolStoryCard extends React.Component {
               fontSize: 20,
               fontWeight: 'bold',
               paddingBottom: 10,
-              borderBottomWidth: 0.5,
             }}>
             #{this.props.poolData.id}
           </Text>
-          <Text style={{paddingTop: 5, fontSize: 16}}>
+          <Text style={{fontSize: 16}}>
             {this.props.poolData.events.length}{' '}
             {this.props.poolData.events.length === 1 ? 'evento' : 'eventi'}
           </Text>
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
   container: {
     minWidth: 90,
     height: 90,
-    backgroundColor: '#EEE',
+    backgroundColor: '#F0F0F0',
     padding: 15,
     marginTop: 15,
     marginBottom: 30,

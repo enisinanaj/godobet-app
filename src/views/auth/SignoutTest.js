@@ -11,6 +11,7 @@ import {
 import {Icon} from 'react-native-elements';
 import config from '../../store/config';
 import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 import TokenManager from '../../components/auth/TokenManager';
 
 import {connect} from 'react-redux';
@@ -35,6 +36,14 @@ class SignoutTest extends React.Component {
       });
   }
 
+  async getNotificationToken() {
+    await messaging()
+      .getToken()
+      .then((token) => {
+        console.log(token);
+      });
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -42,6 +51,12 @@ class SignoutTest extends React.Component {
           style={styles.buttonStyle}
           onPress={() => this.logout()}>
           <Text style={{fontSize: 18, color: '#FFF'}}>Logout</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          onPress={() => this.getNotificationToken()}>
+          <Text style={{fontSize: 18, color: '#FFF'}}>Token</Text>
         </TouchableOpacity>
       </View>
     );

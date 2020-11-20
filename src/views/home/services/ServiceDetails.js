@@ -61,7 +61,7 @@ class ServiceDetails extends React.Component {
               taxonomiesLoaded: true,
               taxonomiesObjects: response._embedded.taxonomy,
             });
-            console.log(arrayTaxonomies);
+            //console.log(arrayTaxonomies);
           }
         });
     } catch {

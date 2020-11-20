@@ -36,7 +36,6 @@ class PoolCard extends React.Component {
           style={{
             flexDirection: 'row',
             paddingBottom: 10,
-            borderBottomWidth: 0.5,
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
@@ -49,7 +48,7 @@ class PoolCard extends React.Component {
           </Text>
           <Icon name="arrow-forward" type="ionicon" color="#555" />
         </View>
-        <Text style={{paddingTop: 5, fontSize: 16}}>
+        <Text style={{paddingTop: 5, fontSize: 18}}>
           {this.props.poolData.events.length}{' '}
           {this.props.poolData.events.length === 1 ? 'evento' : 'eventi'}
         </Text>

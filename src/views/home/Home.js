@@ -2,7 +2,7 @@ import React from 'react';
 import {
   View,
   Text,
-  FlatList,
+  Button,
   StyleSheet,
   TouchableOpacity,
   TextInput,
@@ -10,8 +10,9 @@ import {
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import config from '../../store/config';
-import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 import TokenManager from '../../components/auth/TokenManager';
+import Menu, {MenuItem, MenuDivider} from 'react-native-material-menu';
 
 import PoolStories from './pools/PoolStories';
 import ServicesList from './services/ServicesList';
@@ -25,10 +26,83 @@ class Home extends React.Component {
     pools: [],
   };
 
+  _menu = null;
+
+  setMenuRef = (ref) => {
+    this._menu = ref;
+  };
+
+  hideMenu = () => {
+    this._menu.hide();
+  };
+
+  showMenu = () => {
+    this._menu.show();
+  };
+
   componentDidMount() {
+    this.handleNotificationOnOpenedApp();
+    this.handleInitialNotification();
+    this.props.navigation.setOptions({
+      headerRight: () => (
+        <Menu
+          ref={this.setMenuRef}
+          style={{marginTop: 15}}
+          button={
+            <TouchableOpacity style={{padding: 15}} onPress={this.showMenu}>
+              <Icon name="ellipsis-vertical" type="ionicon" color="#555" />
+            </TouchableOpacity>
+          }>
+          <MenuItem
+            onPress={() => {
+              this.hideMenu();
+              this.props.navigation.navigate('Impostazioni');
+            }}>
+            Impostazioni
+          </MenuItem>
+        </Menu>
+      ),
+    });
     // console.log(JSON.stringify(this.props.app.user._links, null, 2));
     this.getMySubscriptions();
-    //this.testPacchetti();
+  }
+
+  handleNotificationOnOpenedApp() {
+    messaging().onNotificationOpenedApp((remoteMessage) => {
+      this.handleNotification(remoteMessage);
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage,
+      );
+    });
+  }
+
+  handleInitialNotification() {
+    messaging()
+      .getInitialNotification()
+      .then((remoteMessage) => {
+        if (remoteMessage) {
+          this.handleNotification(remoteMessage);
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage,
+          );
+          //setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+        }
+      });
+  }
+
+  handleNotification(notification) {
+    if (notification.data && notification.data.type)
+      switch (notification.data.type) {
+        case 'newPool':
+          this.props.navigation.push('PoolDetails', {
+            poolUrl: notification.data.poolUrl,
+          });
+          break;
+        default:
+          break;
+      }
   }
 
   async testNewSubscriber() {
@@ -77,28 +151,31 @@ class Home extends React.Component {
 
   async getMySubscriptions() {
     //this.props.app.user._links.subscriptions.href
-    //console.log(JSON.stringify(this.props.app.user, null, 2));
+    console.log(JSON.stringify(this.props.app.user, null, 2));
     var token = await TokenManager.getInstance().getToken();
-    this.setState({loading: true, noErrors: true}, () => {
-      try {
-        fetch(this.props.app.user._links.subscriptions.href, {
-          method: 'GET',
-          headers: {'Content-Type': 'application/json', 'X-Auth': token},
-        })
-          .then((response) => response.json())
-          .then((response) => {
-            if (response._embedded) {
-              this.setState({
-                loading: false,
-                noErrors: true,
-                subscriptions: response._embedded.subscriptions,
-              });
-            }
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    });
+    this.setState(
+      {loading: true, noErrors: true, pools: [], subscriptions: []},
+      () => {
+        try {
+          fetch(this.props.app.user._links.subscriptions.href, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json', 'X-Auth': token},
+          })
+            .then((response) => response.json())
+            .then((response) => {
+              if (response._embedded) {
+                this.setState({
+                  loading: false,
+                  noErrors: true,
+                  subscriptions: response._embedded.subscriptions,
+                });
+              }
+            });
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    );
   }
 
   render() {
