@@ -13,7 +13,7 @@ import {Icon} from 'react-native-elements';
 import config from '../../store/config';
 import auth from '@react-native-firebase/auth';
 import TokenManager from '../../components/auth/TokenManager';
-
+import {lightStyles, darkStyles} from '../../components/Styles';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../store/actions/actions';
@@ -69,11 +69,13 @@ class Recover extends React.Component {
   }
 
   render() {
+    const styles =
+      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     return (
-      <View style={styles.container}>
-        <Text style={{fontSize: 18, textAlign: 'center'}}>
+      <View style={{...styles.container, padding: 30, alignItems: 'center'}}>
+        <Text style={{...styles.text18, textAlign: 'center'}}>
           Inserisci il tuo indirizzo email per ricevere le istruzioni su come
-          resettare il tuo account
+          reimpostare il tuo account
         </Text>
         <View
           style={{
@@ -90,8 +92,8 @@ class Recover extends React.Component {
             value={this.state.email}
             onChangeText={(email) => this.validateEmail(email)}
           />
-          <View style={styles.iconViewStyle}>
-            <Icon name="mail" type="ionicon" color="#555" />
+          <View style={{margin: 15}}>
+            <Icon name="mail" type="ionicon" color={styles.icon.color} />
           </View>
         </View>
         {this.state.emailError && (
@@ -104,7 +106,7 @@ class Recover extends React.Component {
         )}
 
         <TouchableOpacity
-          style={styles.buttonStyle}
+          style={{...styles.button, backgroundColor: '#d9534f'}}
           disabled={this.state.recoverLoading}
           onPress={() => this.recoverPassword()}>
           {this.state.recoverLoading ? (
@@ -121,51 +123,13 @@ class Recover extends React.Component {
           </Text>
         </View>
         <View style={{marginTop: 30, alignItems: 'center'}}>
-          <Text>© 2020 - GodoBet</Text>
-          <Text>Powered by Newline Code</Text>
+          <Text style={styles.text14}>© 2020 - GodoBet</Text>
+          <Text style={styles.text14}>Powered by Newline Code</Text>
         </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  headerImage: {width: 180, height: 40},
-  container: {
-    flex: 1,
-    padding: 30,
-    alignItems: 'center',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    marginTop: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    borderWidth: 0.5,
-    borderColor: '#AAA',
-  },
-  inputStyle: {
-    flex: 1,
-    height: 60,
-    padding: 15,
-    paddingRight: 0,
-    fontSize: 18,
-    justifyContent: 'center',
-    fontWeight: 'bold',
-  },
-  buttonStyle: {
-    width: '100%',
-    height: 60,
-    marginTop: 30,
-    backgroundColor: '#d9534f',
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconViewStyle: {margin: 15},
-});
 
 const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => ({

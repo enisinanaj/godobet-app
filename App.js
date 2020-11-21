@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, View} from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from './src/store/actions/actions';
@@ -8,6 +8,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import Routes from './src/components/Routes';
 import HomeStackRef from './src/components/HomeStackRef';
 import {Appearance, useColorScheme} from 'react-native-appearance';
+import {lightStyles, darkStyles} from './src/components/Styles';
 
 class App extends React.Component {
   componentDidMount() {
@@ -24,22 +25,24 @@ class App extends React.Component {
   }
 
   render() {
+    const styles =
+      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     return (
       <NavigationContainer
         ref={(nav) => {
           if (nav != null) HomeStackRef.setRef(nav);
         }}>
         <StatusBar
-          backgroundColor={
-            this.props.theme.currentTheme === 'dark' ? '#222' : '#FFF'
-          }
+          backgroundColor={styles.headerBackground.backgroundColor}
           barStyle={
             this.props.theme.currentTheme === 'dark'
               ? 'light-content'
               : 'dark-content'
           }
         />
-        <Routes props={this.props} />
+        <View style={styles.container}>
+          <Routes props={this.props} />
+        </View>
       </NavigationContainer>
     );
   }

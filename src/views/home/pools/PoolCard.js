@@ -50,10 +50,45 @@ class PoolCard extends React.Component {
           </Text>
           <Icon name="arrow-forward" type="ionicon" color={styles.icon.color} />
         </View>
-        <Text style={{paddingTop: 5, ...styles.text18}}>
-          {this.props.poolData.events.length}{' '}
-          {this.props.poolData.events.length === 1 ? 'evento' : 'eventi'}
-        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingTop: 5,
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+          }}>
+          <View style={{flexDirection: 'row'}}>
+            <Icon
+              name="analytics-outline"
+              type="ionicon"
+              color={styles.icon.color}
+            />
+            <Text style={{...styles.text18, marginLeft: 10}}>
+              Quota:{' '}
+              <Text style={styles.bold}>{this.props.poolData.quote}€</Text>
+            </Text>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <Icon
+              name="pie-chart-outline"
+              type="ionicon"
+              color={styles.icon.color}
+            />
+            <Text style={{...styles.text18, marginLeft: 10}}>
+              Stake:{' '}
+              <Text style={styles.bold}>{this.props.poolData.stake}</Text>
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{flexDirection: 'row', alignItems: 'center', paddingTop: 5}}>
+          <Icon name="list-outline" type="ionicon" color={styles.icon.color} />
+          <Text style={{...styles.text18, marginLeft: 10}}>
+            {this.props.poolData.events.length}{' '}
+            {this.props.poolData.events.length === 1 ? 'evento' : 'eventi'}
+          </Text>
+        </View>
       </TouchableOpacity>
     );
   }

@@ -8,7 +8,7 @@ const lightStyles = StyleSheet.create({
     backgroundColor: '#FFF',
   },
   background: {
-    color: '#DDD',
+    backgroundColor: '#DDD',
   },
   primaryColor: {
     color: '#57BD7D',
@@ -45,7 +45,7 @@ const lightStyles = StyleSheet.create({
   storiesCardContainer: {
     minWidth: 90,
     height: 90,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#DDD',
     padding: 15,
     marginTop: 15,
     marginBottom: 30,
@@ -143,6 +143,35 @@ const lightStyles = StyleSheet.create({
   headerBackground: {
     backgroundColor: '#FFF',
   },
+  button: {
+    width: '100%',
+    height: 60,
+    marginTop: 30,
+    backgroundColor: '#24A0ED',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    marginTop: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    borderWidth: 0.5,
+    borderColor: '#AAA',
+  },
+  inputStyle: {
+    flex: 1,
+    height: 60,
+    padding: 15,
+    paddingRight: 0,
+    fontSize: 18,
+    color: lightText,
+    justifyContent: 'center',
+    fontWeight: 'bold',
+  },
 });
 
 const darkStyles = StyleSheet.create({
@@ -150,7 +179,7 @@ const darkStyles = StyleSheet.create({
     backgroundColor: '#222',
   },
   background: {
-    color: '#000',
+    backgroundColor: '#000',
   },
   primaryColor: {
     color: '#57BD7D',
@@ -284,6 +313,35 @@ const darkStyles = StyleSheet.create({
   },
   headerBackground: {
     backgroundColor: '#222',
+  },
+  button: {
+    width: '100%',
+    height: 60,
+    marginTop: 30,
+    backgroundColor: '#24A0ED',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    marginTop: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#222',
+    borderRadius: 10,
+    borderWidth: 0.5,
+    borderColor: '#AAA',
+  },
+  inputStyle: {
+    flex: 1,
+    height: 60,
+    padding: 15,
+    paddingRight: 0,
+    fontSize: 18,
+    color: darkText,
+    justifyContent: 'center',
+    fontWeight: 'bold',
   },
 });
 

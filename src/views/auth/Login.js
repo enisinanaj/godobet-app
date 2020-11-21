@@ -13,6 +13,7 @@ import config from '../../store/config';
 import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import TokenManager from '../../components/auth/TokenManager';
+import {lightStyles, darkStyles} from '../../components/Styles';
 import DeviceInfo from 'react-native-device-info';
 
 import {connect} from 'react-redux';
@@ -184,9 +185,11 @@ class Login extends React.Component {
   };
 
   render() {
+    const styles =
+      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     return (
-      <View style={styles.container}>
-        <Text style={{fontSize: 18}}>Accedi a GodoBet</Text>
+      <View style={{...styles.container, padding: 30, alignItems: 'center'}}>
+        <Text style={styles.text18}>Accedi a GodoBet</Text>
         <View
           style={{
             ...styles.inputContainer,
@@ -202,8 +205,8 @@ class Login extends React.Component {
             value={this.state.email}
             onChangeText={(email) => this.validateEmail(email)}
           />
-          <View style={styles.iconViewStyle}>
-            <Icon name="mail" type="ionicon" color="#555" />
+          <View style={{margin: 15}}>
+            <Icon name="mail" type="ionicon" color={styles.icon.color} />
           </View>
         </View>
         {this.state.emailError && (
@@ -229,8 +232,8 @@ class Login extends React.Component {
             secureTextEntry
             onChangeText={(password) => this.validatePassword(password)}
           />
-          <View style={styles.iconViewStyle}>
-            <Icon name="lock-closed" type="ionicon" color="#555" />
+          <View style={{margin: 15}}>
+            <Icon name="lock-closed" type="ionicon" color={styles.icon.color} />
           </View>
         </View>
         {this.state.passwordError && (
@@ -242,7 +245,7 @@ class Login extends React.Component {
           </View>
         )}
         <TouchableOpacity
-          style={styles.buttonStyle}
+          style={styles.button}
           disabled={this.state.loginLoading}
           onPress={() => {
             //this.testDeviceInfo();
@@ -263,7 +266,7 @@ class Login extends React.Component {
           <TouchableOpacity
             disabled={this.state.loginLoading}
             onPress={() => this.props.navigation.navigate('Recover')}>
-            <Text style={{fontSize: 16, textAlign: 'right'}}>
+            <Text style={{...styles.text16, textAlign: 'right'}}>
               Password dimenticata?
             </Text>
           </TouchableOpacity>
@@ -275,51 +278,13 @@ class Login extends React.Component {
           </Text>
         </View>
         <View style={{marginTop: 30, alignItems: 'center'}}>
-          <Text>© 2020 - GodoBet</Text>
-          <Text>Powered by Newline Code</Text>
+          <Text style={styles.text14}>© 2020 - GodoBet</Text>
+          <Text style={styles.text14}>Powered by Newline Code</Text>
         </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  headerImage: {width: 180, height: 40},
-  container: {
-    flex: 1,
-    padding: 30,
-    alignItems: 'center',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    marginTop: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    borderWidth: 0.5,
-    borderColor: '#AAA',
-  },
-  inputStyle: {
-    flex: 1,
-    height: 60,
-    padding: 15,
-    paddingRight: 0,
-    fontSize: 18,
-    justifyContent: 'center',
-    fontWeight: 'bold',
-  },
-  buttonStyle: {
-    width: '100%',
-    height: 60,
-    marginTop: 30,
-    backgroundColor: '#24A0ED',
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconViewStyle: {margin: 15},
-});
 
 const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => ({

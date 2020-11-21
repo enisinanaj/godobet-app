@@ -206,6 +206,7 @@ class ServiceDetails extends React.Component {
           )}
         </View>
         <Tab.Navigator
+          sceneContainerStyle={styles.container}
           tabBarOptions={{
             style: {
               ...styles.cardBackground,

@@ -110,7 +110,7 @@ class ServiceCard extends React.Component {
               alignItems: 'center',
               flex: 1,
             }}>
-            <View style={{flexDirection: 'column', flex: 1}}>
+            <View style={{flexDirection: 'column', flex: 1, marginRight: 5}}>
               <Text style={styles.title}>{this.state.service.serviceName}</Text>
               <Text style={styles.subtitle}>
                 {this.state.service.description}
@@ -126,37 +126,52 @@ class ServiceCard extends React.Component {
               color={styles.primaryColor.color}
               shadowColor={styles.primaryColorTransparency.color}
               bgColor={styles.cardBackground.backgroundColor}>
-              <Text
-                style={{
-                  ...styles.text14,
-                  textAlign: 'center',
-                  padding: 2,
-                  paddingBottom: 0,
-                }}>
-                giorni
-              </Text>
-              <Text
-                style={{
-                  fontSize: 22,
-                  color: '#57BD7D',
-                  textAlign: 'center',
-                  paddingHorizontal: 5,
-                  fontWeight: 'bold',
-                }}>
-                {this.getDaysToNextPayment()}
-              </Text>
-              <Text
-                style={{
-                  ...styles.text14,
-                  fontSize: 14,
-                  textAlign: 'center',
-                  padding: 2,
-                  paddingTop: 0,
-                }}>
-                al rinnovo
-              </Text>
+              {this.getDaysToNextPayment() >= 0 ? (
+                <View>
+                  <Text
+                    style={{
+                      ...styles.text14,
+                      textAlign: 'center',
+                      padding: 2,
+                      paddingBottom: 0,
+                    }}>
+                    giorni
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 22,
+                      color: '#57BD7D',
+                      textAlign: 'center',
+                      paddingHorizontal: 5,
+                      fontWeight: 'bold',
+                    }}>
+                    {this.getDaysToNextPayment()}
+                  </Text>
+                  <Text
+                    style={{
+                      ...styles.text14,
+                      fontSize: 14,
+                      textAlign: 'center',
+                      padding: 2,
+                      paddingTop: 0,
+                    }}>
+                    al rinnovo
+                  </Text>
+                </View>
+              ) : (
+                <Text
+                  style={{
+                    fontSize: 22,
+                    color: '#57BD7D',
+                    textAlign: 'center',
+                    paddingHorizontal: 5,
+                    fontWeight: 'bold',
+                  }}>
+                  scaduto
+                </Text>
+              )}
             </ProgressCircle>
-            <View style={{height: '100%'}}>
+            <View style={{height: '100%', marginLeft: -10}}>
               <Icon
                 name="arrow-forward"
                 type="ionicon"

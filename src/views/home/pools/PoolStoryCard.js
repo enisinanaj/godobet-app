@@ -65,7 +65,12 @@ class PoolStoryCard extends React.Component {
     else
       return (
         <TouchableOpacity
-          style={{...styles.storiesCardContainer, alignItems: 'center'}}
+          style={{
+            ...styles.storiesCardContainer,
+            alignItems: 'center',
+            borderBottomWidth: 1,
+            borderColor: styles.primaryColor.color,
+          }}
           onPress={() =>
             HomeStackRef.getRef().navigate('PoolDetails', {
               //poolUrl: 'https://godobet-api.herokuapp.com/pools/19',
@@ -74,17 +79,24 @@ class PoolStoryCard extends React.Component {
           }>
           <Text
             style={{
+              textAlign: 'center',
+              ...styles.text14,
+              marginBottom: -5,
+            }}>
+            Quota
+          </Text>
+          <Text
+            style={{
               width: '100%',
               textAlign: 'center',
-              ...styles.text20,
+              ...styles.text18,
               fontWeight: 'bold',
-              paddingBottom: 10,
+              paddingBottom: 5,
             }}>
-            #{this.props.poolData.id}
+            {this.props.poolData.quote}€
           </Text>
           <Text style={styles.text16}>
-            {this.props.poolData.events.length}{' '}
-            {this.props.poolData.events.length === 1 ? 'evento' : 'eventi'}
+            {this.props.poolData.events.length > 1 ? 'multipla' : 'singola'}
           </Text>
         </TouchableOpacity>
       );

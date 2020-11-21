@@ -53,6 +53,7 @@ class PoolStories extends React.Component {
           renderItem={this.renderItem}
           ListEmptyComponent={this.listEmptyRenderItem}
           horizontal
+          ListFooterComponent={<View style={{marginLeft: 30}} />}
           keyExtractor={(item, index) => String(index)}
         />
       </View>
