@@ -3,24 +3,68 @@ import {
   View,
   Text,
   FlatList,
-  StyleSheet,
-  Appearance,
-  TextInput,
-  ActivityIndicator,
 } from 'react-native';
-import {Icon} from 'react-native-elements';
 import PoolStoryCard from './PoolStoryCard';
 import {lightStyles, darkStyles} from '../../../components/Styles';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../../store/actions/actions';
+import config from '../../../store/config';
+import TokenManager from '../../../components/auth/TokenManager';
+
+const DEBUG = false;
+const FOLLOWED = 1;
+
+const loadAllPools = (url, args = {}) => {
+  return TokenManager.getInstance()
+    .getToken()
+    .then((jwt) => {
+      return fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth": jwt,
+        },
+        ...args,
+      })
+        .then((e) => e.json())
+        .then((json) =>
+          json._embedded && json._embedded.pools
+            ? json._embedded.pools
+            : json._embedded && json._embedded.playedPools
+            ? json._embedded.playedPools
+            : []
+        );
+    });
+};
+
+const getTipCards = (dropdownHidden) => (pools) => {
+  if (pools.length === 0) {
+    return (
+      <Text>Nessuna tip in questo momento.</Text>
+    );
+  }
+
+  return pools.map((pool, i) => {
+    return (
+      <PoolStoryCard key={i} poolData={pool} />
+    );
+  });
+};
 
 class PoolStories extends React.Component {
-  state = {
-    loading: true,
-    noError: true,
-    service: {},
-  };
+
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      loading: true,
+      noError: true,
+      service: {},
+      expiredPools: [],
+      ongoingPools: [],
+      followedPools: [],
+    }
+  }
 
   renderItem = ({item, index}) => <PoolStoryCard key={index} poolData={item} />;
 
@@ -33,9 +77,77 @@ class PoolStories extends React.Component {
     </View>
   );
 
+  componentDidMount() {
+    let pools = this.getMyPools();
+    let playedPools = this.getPlayReference();
+
+    playedPools
+      .then((playedPools) => pools.then((pools) => [pools, playedPools]))
+      .then((poolsSets) => {
+        console.warn(poolsStes)
+        return poolsSets[0].filter(
+          (pool) => !poolsSets[1].find((pp) => pp.references.pool === pool.id || pool.outcome)
+        )
+      })
+      .then((ongoingPools) => this.setState({ ongoingPools }));
+
+    playedPools
+      .then((playedPools) => {
+        return pools.then((pools) => [pools, playedPools]);
+      })
+      .then((poolsSets) => {
+        this.getExpiredPoolsCards(pools, (pool) => poolsSets[1].find((pp) => pp.references.pool === pool.id) && !!pool.outcome)
+        .then((expiredPools) => {
+          if (expiredPools) {
+            this.setState({expiredPools})
+          }
+        });
+
+        return poolsSets[0].filter((pool) =>
+          poolsSets[1].find(
+            (pp) => pp.references.pool === pool.id && pp.direction === FOLLOWED
+          )
+        )
+      })
+      .then((filteredPools) => filteredPools.filter((p) => !p.outcome).sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn)))
+      .then((followedPools) => {
+        this.setState({ followedPools })
+      });
+  }
+
+  getMyPools = () => {
+    return loadAllPools(
+      `${config.API_URL}/pools/search/subscriberPools?subscriber=${this.props.app.user._links.self.href}&page=0&size=1000`
+    ).catch(console.error);
+  };
+
+  getPlayReference = () => {
+    return loadAllPools(
+      `${this.props.app.user._links.self.href}/playedPoolsRel?page=0&size=1000`
+    ).catch(console.error);
+  };
+
+  filterMyPools = (pools) => {
+    const myPools =
+      this.props.user._embedded && this.props.user._embedded.playedPools
+        ? this.props.user._embedded.playedPools.map((pool) => pool.id)
+        : [];
+    return pools.map((pool) => {
+      return { ...pool, followed: myPools.includes(pool.id) };
+    });
+  };
+
+  getExpiredPoolsCards = (pools, filter) => {
+    return (
+      pools
+        .then((pools) => pools.filter(filter).sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn)))
+        .then(expiredPools => expiredPools.filter(pool => new Date(pool.createdOn).getTime() > new Date().getTime() - (30 * 24 * 60 * 60 * 1000)))
+        .then((pool) => getTipCards(!filter(pool))(pool))
+    );
+  };
+
   render() {
-    const styles =
-      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+    const styles = this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     return (
       <View style={styles.storiesContainer}>
         <Text
@@ -49,7 +161,7 @@ class PoolStories extends React.Component {
           Le tue schedine
         </Text>
         <FlatList
-          data={this.props.pools}
+          data={this.props.ongoingPools}
           renderItem={this.renderItem}
           ListEmptyComponent={this.listEmptyRenderItem}
           horizontal
@@ -60,49 +172,6 @@ class PoolStories extends React.Component {
     );
   }
 }
-
-const styles2 = StyleSheet.create({
-  headerImage: {width: 180, height: 40},
-  container: {
-    backgroundColor: '#fff',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    marginTop: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    borderWidth: 0.5,
-    borderColor: '#AAA',
-  },
-  inputStyle: {
-    flex: 1,
-    height: 60,
-    padding: 15,
-    paddingRight: 0,
-    fontSize: 18,
-    justifyContent: 'center',
-    fontWeight: 'bold',
-  },
-  buttonStyle: {
-    width: '100%',
-    height: 60,
-    marginTop: 30,
-    backgroundColor: '#24A0ED',
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconViewStyle: {margin: 15},
-});
 
 const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => ({

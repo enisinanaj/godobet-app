@@ -58,11 +58,7 @@ class PoolDetails extends React.Component {
         })
           .then((response) => response.json())
           .then((response) => {
-            console.log(JSON.stringify(response, null, 2));
             if (response) {
-              //console.log(JSON.stringify(this.props.serviceData, null, 2));
-              console.log('scarico');
-              console.log(JSON.stringify(response, null, 2));
               this.setState({
                 loading: false,
                 noErrors: true,
@@ -72,7 +68,6 @@ class PoolDetails extends React.Component {
             }
           });
       } catch (error) {
-        console.log(JSON.stringify(error, null, 2));
       }
     });
   }
@@ -87,11 +82,7 @@ class PoolDetails extends React.Component {
         })
           .then((response) => response.json())
           .then((response) => {
-            console.log('eventi');
-            console.log(JSON.stringify(response, null, 2));
             if (response._embedded) {
-              //console.log(JSON.stringify(this.props.serviceData, null, 2));
-              //console.log(JSON.stringify(response, null, 2));
               this.setState({
                 eventsLoading: false,
                 eventsNoErrors: false,

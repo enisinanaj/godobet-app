@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import config from '../../store/config';
@@ -22,8 +23,8 @@ import * as actions from '../../store/actions/actions';
 
 class Login extends React.Component {
   state = {
-    email: '',
-    password: '',
+    email: 'kconhe@gmail.com',
+    password: '12688ab:',
     loginLoading: false,
     loginError: '',
   };
@@ -56,7 +57,6 @@ class Login extends React.Component {
             );
           });
       } catch {
-        console.log(this.props.app);
         this.setState({
           loginError:
             'Errore! Non sono riuscito a prendere la lista dei tuoi dispositivi',
@@ -106,7 +106,12 @@ class Login extends React.Component {
   }
 
   async getNotificationToken() {
-    return await messaging().getToken();
+    //await messaging().registerDeviceForRemoteMessages()
+    if (Platform.OS === 'android') {
+      return await messaging().getToken();
+    } else if (Platform.OS === 'ios') {
+      return await messaging().getAPNSToken();
+    } 
   }
 
   async validateEmail(email) {
@@ -140,13 +145,14 @@ class Login extends React.Component {
       this.setState({loginLoading: true});
       auth()
         .signInWithEmailAndPassword(this.state.email, this.state.password)
-        .then((response) => {})
+        .then(() => {})
         .catch((e) => {
           this.setState({
             loginError: e.message,
             loginLoading: false,
           });
         });
+      
       this.addUserStateChangeEvent();
     }
   }
@@ -171,13 +177,17 @@ class Login extends React.Component {
               },
             },
           )
-            .then((e) => e.json())
+            .then((e) => {
+              return e.json()
+            })
             .then((localUser) => {
-              this.checkUserDevices({
+              // this.checkUserDevices({
+              this.props.actions.userLogin({
                 ...user,
                 ...localUser,
               });
-            });
+            })
+            .catch(e => console.warn(e));
         });
 
       //this.props.actions.userLogin(user);

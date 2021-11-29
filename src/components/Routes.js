@@ -16,7 +16,6 @@ const LoginStack = createStackNavigator();
 const HomeStack = createStackNavigator();
 
 const Routes = ({props}) => {
-  console.warn(props);
   const styles = props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
   if (!props.app.loggedIn) {
     return (

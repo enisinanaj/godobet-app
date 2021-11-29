@@ -8,7 +8,6 @@ const initialState = {
 const appReducers = (state = initialState, action) => {
   switch (action.type) {
     case USER_LOGIN:
-      console.warn("logging in");
       return {
         ...state,
         user: action.user,

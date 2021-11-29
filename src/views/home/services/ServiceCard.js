@@ -2,11 +2,8 @@ import React from 'react';
 import {
   View,
   Text,
-  FlatList,
   StyleSheet,
   TouchableOpacity,
-  Appearance,
-  ActivityIndicator,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import {lightStyles, darkStyles} from '../../../components/Styles';
@@ -20,6 +17,7 @@ import moment from 'moment';
 import 'moment/locale/it';
 moment.locale('it');
 import ProgressCircle from 'react-native-progress-circle';
+import { normalizeUrl } from '../../../components/Utils';
 
 class ServiceCard extends React.Component {
   state = {
@@ -38,15 +36,13 @@ class ServiceCard extends React.Component {
     var token = await TokenManager.getInstance().getToken();
     this.setState({loading: true, noErrors: true}, () => {
       try {
-        fetch(this.props.serviceData._links.services.href, {
+        fetch(normalizeUrl(this.props.serviceData._links.services.href), {
           method: 'GET',
           headers: {'Content-Type': 'application/json', 'X-Auth': token},
         })
           .then((response) => response.json())
           .then((response) => {
             if (response) {
-              //console.log(JSON.stringify(this.props.serviceData, null, 2));
-              //console.log(JSON.stringify(response, null, 2));
               this.setState({
                 loading: false,
                 noErrors: true,
@@ -64,12 +60,7 @@ class ServiceCard extends React.Component {
   }
 
   getDaysToNextPayment() {
-    const ultimoPagamento = moment(this.props.serviceData.lastCharge);
-    const dataScadenza = ultimoPagamento.add(
-      this.state.service.duration,
-      'days',
-    );
-    return ultimoPagamento.diff(moment().startOf('days'), 'days');
+    return this.props.serviceData.remainingDays;
   }
 
   render() {
@@ -113,64 +104,65 @@ class ServiceCard extends React.Component {
             <View style={{flexDirection: 'column', flex: 1, marginRight: 5}}>
               <Text style={styles.title}>{this.state.service.serviceName}</Text>
               <Text style={styles.subtitle}>
-                {this.state.service.description}
+                {this.state.service.description.substr(0, 70)}...
               </Text>
             </View>
-            <ProgressCircle
-              percent={
-                (this.getDaysToNextPayment() * 100) /
-                this.state.service.duration
-              }
-              radius={60}
-              borderWidth={14}
-              color={styles.primaryColor.color}
-              shadowColor={styles.primaryColorTransparency.color}
-              bgColor={styles.cardBackground.backgroundColor}>
-              {this.getDaysToNextPayment() >= 0 ? (
-                <View>
+            <View style={{marginRight: 15, marginTop: 10}}>
+              <ProgressCircle
+                percent={
+                  (this.getDaysToNextPayment() * 100) /
+                  this.state.service.duration
+                }
+                radius={35}
+                borderWidth={10}
+                color={styles.primaryColor.color}
+                shadowColor={styles.primaryColorTransparency.color}
+                bgColor={styles.cardBackground.backgroundColor}>
+                {this.getDaysToNextPayment() >= 0 ? (
+                  <View>
+                    <Text
+                      style={{
+                        ...styles.text9,
+                        textAlign: 'center',
+                        padding: 2,
+                        paddingBottom: 0,
+                      }}>
+                      giorni
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: '#57BD7D',
+                        textAlign: 'center',
+                        paddingHorizontal: 5,
+                        fontWeight: 'bold',
+                      }}>
+                      {this.getDaysToNextPayment()}
+                    </Text>
+                    <Text
+                      style={{
+                        ...styles.text9,
+                        textAlign: 'center',
+                        padding: 2,
+                        paddingTop: 0,
+                      }}>
+                      al rinnovo
+                    </Text>
+                  </View>
+                ) : (
                   <Text
                     style={{
-                      ...styles.text14,
-                      textAlign: 'center',
-                      padding: 2,
-                      paddingBottom: 0,
-                    }}>
-                    giorni
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 22,
+                      fontSize: 11,
                       color: '#57BD7D',
                       textAlign: 'center',
                       paddingHorizontal: 5,
                       fontWeight: 'bold',
                     }}>
-                    {this.getDaysToNextPayment()}
+                    scaduto
                   </Text>
-                  <Text
-                    style={{
-                      ...styles.text14,
-                      fontSize: 14,
-                      textAlign: 'center',
-                      padding: 2,
-                      paddingTop: 0,
-                    }}>
-                    al rinnovo
-                  </Text>
-                </View>
-              ) : (
-                <Text
-                  style={{
-                    fontSize: 22,
-                    color: '#57BD7D',
-                    textAlign: 'center',
-                    paddingHorizontal: 5,
-                    fontWeight: 'bold',
-                  }}>
-                  scaduto
-                </Text>
-              )}
-            </ProgressCircle>
+                )}
+              </ProgressCircle>
+            </View>
             <View style={{height: '100%', marginLeft: -10}}>
               <Icon
                 name="arrow-forward"
@@ -183,52 +175,6 @@ class ServiceCard extends React.Component {
       );
   }
 }
-
-const styles2 = StyleSheet.create({
-  headerImage: {width: 180, height: 40},
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    marginBottom: 30,
-    padding: 15,
-    marginHorizontal: 30,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    marginTop: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    borderWidth: 0.5,
-    borderColor: '#AAA',
-  },
-  inputStyle: {
-    flex: 1,
-    height: 60,
-    padding: 15,
-    paddingRight: 0,
-    fontSize: 18,
-    justifyContent: 'center',
-    fontWeight: 'bold',
-  },
-  buttonStyle: {
-    width: '100%',
-    height: 60,
-    marginTop: 30,
-    backgroundColor: '#24A0ED',
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconViewStyle: {margin: 15},
-});
 
 const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => ({

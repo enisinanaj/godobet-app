@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>544349522367-uj5hab6u0nqp3gpd5qiok2e6ebmcdq6g.apps.googleusercontent.com</string>
+	<string>544349522367-9njogn2dfkf67r5k6bpdit2bjbc7r5d0.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.544349522367-uj5hab6u0nqp3gpd5qiok2e6ebmcdq6g</string>
+	<string>com.googleusercontent.apps.544349522367-9njogn2dfkf67r5k6bpdit2bjbc7r5d0</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>544349522367-1jtg6grard123h7ad5j3gor0nglibj4u.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyCx3HJZ8NCOrIaq4QquFq0SN-FinMF1qPY</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.newlinecode.GodobetApp</string>
+	<string>it.godobet.iosapp</string>
 	<key>PROJECT_ID</key>
 	<string>godobet-ac5f4</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:544349522367:ios:a90b5fcdfebc030727790a</string>
+	<string>1:544349522367:ios:b9d262e5e74a1ad627790a</string>
 	<key>DATABASE_URL</key>
 	<string>https://godobet-ac5f4.firebaseio.com</string>
 </dict>

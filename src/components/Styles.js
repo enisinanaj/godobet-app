@@ -256,6 +256,10 @@ const darkStyles = StyleSheet.create({
     paddingBottom: 15,
     backgroundColor: '#222',
   },
+  text9: {
+    fontSize: 9,
+    color: darkText,
+  },
   text14: {
     fontSize: 14,
     color: darkText,
@@ -278,13 +282,13 @@ const darkStyles = StyleSheet.create({
     textAlign: 'right',
   },
   title: {
-    fontSize: 22,
+    fontSize: 20,
     color: darkText,
     fontWeight: 'bold',
     marginBottom: 10,
   },
   subtitle: {
-    fontSize: 22,
+    fontSize: 18,
     color: darkText,
   },
   menuText: {

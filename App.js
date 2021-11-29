@@ -16,7 +16,6 @@ class App extends React.Component {
     this.appearanceListener = Appearance.addChangeListener(({colorScheme}) => {
       this.setColorTheme();
     });
-    console.warn(this.props);
   }
 
   setColorTheme() {

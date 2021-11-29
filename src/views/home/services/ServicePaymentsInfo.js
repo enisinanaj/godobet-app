@@ -2,11 +2,7 @@ import React from 'react';
 import {
   View,
   Text,
-  FlatList,
   StyleSheet,
-  Appearance,
-  TextInput,
-  ActivityIndicator,
 } from 'react-native';
 
 import {connect} from 'react-redux';
@@ -42,7 +38,7 @@ class ServicePaymentsInfo extends React.Component {
   }
 
   getDaysToNextPayment() {
-    return this.getDataScadenza().diff(moment().startOf('day'), 'days');
+    return this.props.route.params.serviceData.remainingDays;
   }
 
   render() {
@@ -77,9 +73,7 @@ class ServicePaymentsInfo extends React.Component {
           <View style={{flexDirection: 'row', marginTop: 10}}>
             <View
               style={{
-                flex:
-                  (this.getDaysToNextPayment() * 100) /
-                  this.props.route.params.serviceData.duration,
+                flex:1,
                 height: 15,
                 borderTopLeftRadius: 7,
                 borderBottomLeftRadius: 7,
@@ -88,10 +82,7 @@ class ServicePaymentsInfo extends React.Component {
             />
             <View
               style={{
-                flex:
-                  100 -
-                  (this.getDaysToNextPayment() * 100) /
-                    this.props.route.params.serviceData.duration,
+                flex: 1,
                 height: 15,
                 borderTopRightRadius: 7,
                 borderBottomRightRadius: 7,

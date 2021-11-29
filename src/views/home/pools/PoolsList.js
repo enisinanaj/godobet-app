@@ -4,16 +4,8 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  Appearance,
-  TextInput,
-  ActivityIndicator,
 } from 'react-native';
-import {Icon} from 'react-native-elements';
-import config from '../../../store/config';
 import {lightStyles, darkStyles} from '../../../components/Styles';
-import TokenManager from '../../../components/auth/TokenManager';
-import ContentLoader, {Rect} from 'react-content-loader/native';
-import HomeStackRef from '../../../components/HomeStackRef';
 import PoolCard from './PoolCard';
 
 import {connect} from 'react-redux';
