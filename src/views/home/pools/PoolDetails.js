@@ -211,11 +211,11 @@ class PoolDetails extends React.Component {
                       SERVIZIO
                     </Text>
                   </View>
-                  <Text style={localStyles.value}>
+                  <Text style={{...localStyles.value, width: 210, height: 40}} numberOfLines={2} ellipsizeMode={'tail'}>
                     {this.state.pool.service.serviceName}
                   </Text>
                 </View>
-                <View style={localStyles.col}>
+                <View style={{...localStyles.col, marginTop: 0}}>
                   <View style={localStyles.row}>
                     <Icon
                       name="trophy-outline"
@@ -223,11 +223,11 @@ class PoolDetails extends React.Component {
                       size={18}
                       color={styles.icon.color}
                     />
-                    <Text style={localStyles.label}>
+                    <Text style={localStyles.label} numberOfLines={2}>
                       PROFITTO
                     </Text>
                   </View>
-                  <Text style={[localStyles.value, {textAlign: 'right', color: this.state.pool.profit >= 0 ? styles.primaryColor.color : '#800' }]}>
+                  <Text style={[localStyles.value, {textAlign: 'right', height: 40, color: this.state.pool.profit >= 0 ? styles.primaryColor.color : '#800' }]}>
                     {this.state.pool.outcome} {this.state.pool.profit.toLocaleString("it-IT", {maximumFractionDigits: 2, minimumFractionDigits: 2})}
                   </Text>
                 </View>
