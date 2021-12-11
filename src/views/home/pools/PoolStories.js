@@ -64,6 +64,7 @@ class PoolStories extends React.Component {
       ongoingPools: [],
       refreshing: false,
       followedPools: [],
+      closed: [],
     }
   }
 
@@ -110,7 +111,15 @@ class PoolStories extends React.Component {
           )
         )
       })
-      .then((filteredPools) => filteredPools.filter((p) => !p.outcome).sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn)))
+      .then((filteredPools) => {
+        this.setState({
+          closed: filteredPools
+                    .filter(p => p.outcome)
+                    .sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn))
+                    .map(p => ({...p, type: "closed"}))
+        });
+        return filteredPools.filter(p => !p.outcome).sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn))
+      })
       .then((followedPools) => {
         this.setState({refreshing: false});
         this.setState({ followedPools: followedPools.map(p => ({...p, type: 'followed'})) })
@@ -163,7 +172,7 @@ class PoolStories extends React.Component {
           Le mie tips
         </Text>
         <FlatList
-          data={[...this.state.ongoingPools, ...this.state.followedPools]}
+          data={[...this.state.ongoingPools, ...this.state.followedPools, ...this.state.closed]}
           renderItem={this.renderItem}
           ListEmptyComponent={this.listEmptyRenderItem}
           horizontal

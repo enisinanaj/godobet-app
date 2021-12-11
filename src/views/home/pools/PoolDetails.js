@@ -215,6 +215,22 @@ class PoolDetails extends React.Component {
                     {this.state.pool.service.serviceName}
                   </Text>
                 </View>
+                <View style={localStyles.col}>
+                  <View style={localStyles.row}>
+                    <Icon
+                      name="trophy-outline"
+                      type="ionicon"
+                      size={18}
+                      color={styles.icon.color}
+                    />
+                    <Text style={localStyles.label}>
+                      PROFITTO
+                    </Text>
+                  </View>
+                  <Text style={[localStyles.value, {textAlign: 'right', color: this.state.pool.profit >= 0 ? styles.primaryColor.color : '#800' }]}>
+                    {this.state.pool.outcome} {this.state.pool.profit.toLocaleString("it-IT", {maximumFractionDigits: 2, minimumFractionDigits: 2})}
+                  </Text>
+                </View>
               </View>
               <View
                 style={localStyles.serviceContainer}>
@@ -231,7 +247,7 @@ class PoolDetails extends React.Component {
                     </Text>
                   </View>
                   
-                  {this.state.motivationOpen && <Text style={styles.text14}>
+                  {this.state.pool.motivation && this.state.motivationOpen && <Text style={styles.text14}>
                     {this.state.pool.motivation}
                   </Text>}
                   {this.state.pool.motivation && !this.state.motivationOpen && <Text 

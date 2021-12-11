@@ -71,7 +71,7 @@ class PoolStoryCard extends React.Component {
               return (      
                 <View style={{flex: 1}}>
                   <Text style={localStyles.competition}>
-                    {e.competition}
+                    {e.competition.trim()}
                   </Text>
                   <Text style={localStyles.event}>
                     {e.event}
@@ -80,12 +80,12 @@ class PoolStoryCard extends React.Component {
               )
             })
           }
-          <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 8}}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
             <View style={{flex: 1}}>
               <Text style={localStyles.labelTitle} >
                 QUOTA
               </Text>
-              <Text style={localStyles.smallValue}>
+              <Text style={[localStyles.smallValue, {width: 85}]}>
                 {this.props.poolData.totalQuote.toLocaleString("it-IT", {maximumFractionDigits: 2, minimumFractionDigits: 2})}
               </Text>
             </View>
@@ -97,11 +97,13 @@ class PoolStoryCard extends React.Component {
                 {(this.props.poolData.stake/100).toLocaleString("it-IT", {maximumFractionDigits: 2, minimumFractionDigits: 2})}%
               </Text>
             </View>
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 2}}>
             {this.props.poolData.events.length == 1 && <View style={{flex: 1}}>
               <Text style={localStyles.labelTitle} >
                 PROPOSTA
               </Text>
-              <Text style={localStyles.smallValue}>
+              <Text style={[localStyles.smallValue, {width: 85}]} numberOfLines={1} ellipsizeMode={'tail'}>
                 {this.props.poolData.events[0].proposal}
               </Text>
             </View>}
@@ -112,6 +114,14 @@ class PoolStoryCard extends React.Component {
                 MULTIPLA
               </Text>
             </View>}
+            {this.props.poolData.outcome ? <View style={{flex: 1}}>
+              <Text style={localStyles.labelTitle} >
+                PROFITTO
+              </Text>
+              <Text style={[localStyles.smallValue, {color: this.props.poolData.profit >= 0 ? styles.primaryColor.color : '#800'}]} numberOfLines={1} ellipsizeMode={'tail'}>
+                {this.props.poolData.profit.toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})}%
+              </Text>
+            </View> : null}
           </View>
         </TouchableOpacity>
       );

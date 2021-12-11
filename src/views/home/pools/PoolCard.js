@@ -31,7 +31,12 @@ class PoolCard extends React.Component {
           })
         }>
         <View>
-          <Text style={styles.title}>{pool.description}</Text>
+          <View style={[localStyles.row, { justifyContent: 'space-between' }]}>
+            <Text style={styles.title}>{pool.description}</Text>
+            {pool.outcome ? <Text style={[styles.title, {
+              color: pool.profit >= 0 ? styles.primaryColor.color : "#800"
+            }]}>{pool.outcome} ({pool.profit.toLocaleString("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2})}%)</Text> : null}
+          </View>
           <View style={localStyles.mainInfoItems}>
             <View style={localStyles.col}>
               <View style={localStyles.row}>

@@ -215,7 +215,7 @@ const darkStyles = StyleSheet.create({
   },
   storiesCardContainer: {
     minWidth: 110,
-    height: 140,
+    height: 160,
     backgroundColor: '#000',
     padding: 15,
     marginTop: 15,
