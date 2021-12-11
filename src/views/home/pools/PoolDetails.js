@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import TokenManager from '../../../components/auth/TokenManager';
@@ -15,7 +16,6 @@ import {bindActionCreators} from 'redux';
 import * as actions from '../../../store/actions/actions';
 import EventCard from '../events/EventCard';
 import config from '../../../store/config';
-import LottieView from 'lottie-react-native';
 
 const buttonStyle = {
   marginBotton: 30,
@@ -85,11 +85,13 @@ class PoolDetails extends React.Component {
   }
 
   followTip() {
-    this.postFollow(config.API_URL + `/played-pools/${this.props.app.user.userCode}/${this.state.pool.id}`);
+    this.postFollow(config.API_URL + `/played-pools/${this.props.app.user.userCode}/${this.state.pool.id}`)
+    .then(() => Alert.alert("Tip seguita!"));
   }
 
   ignoreTip() {
-    this.postFollow(config.API_URL + `/unplayed-pools/${this.props.app.user.userCode}/${this.state.pool.id}`);
+    this.postFollow(config.API_URL + `/unplayed-pools/${this.props.app.user.userCode}/${this.state.pool.id}`)
+    .then(() => Alert.alert("Tip ignorata!"));
   }
 
   postFollow(url) {

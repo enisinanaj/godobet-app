@@ -50,7 +50,7 @@ class PoolStories extends React.Component {
             margin: 30,
             marginVertical: 15,
           }}>
-          I tuoi pacchetti
+          I miei servizi
         </Text>
         <FlatList
           data={this.props.subscriptions}

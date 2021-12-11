@@ -81,11 +81,10 @@ class PoolStories extends React.Component {
   componentDidMount() {
     this.loadContent()
 
-    setInterval(() => this.loadContent(), 1000 * 20);
+    setInterval(() => this.loadContent(), 1000 * 5);
   }
 
   loadContent() {
-    console.warn("loading content")
     let pools = this.getMyPools();
     let playedPools = this.getPlayReference();
 
@@ -161,7 +160,7 @@ class PoolStories extends React.Component {
             paddingBottom: 10,
             ...styles.text20,
           }}>
-          Le tue schedine
+          Le mie tips
         </Text>
         <FlatList
           data={[...this.state.ongoingPools, ...this.state.followedPools]}

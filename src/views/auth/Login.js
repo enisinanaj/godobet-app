@@ -41,27 +41,29 @@ class Login extends React.Component {
   async checkUserDevices(userData) {
     const gotPermission = await this.requestUserPermissionNotifications();
     if (gotPermission) {
+      console.warn('notification permissions: ' + gotPermission)
       const notificationToken = await this.getNotificationToken();
       var token = await TokenManager.getInstance().getToken();
-      try {
-        fetch(userData._links.devices.href, {
-          method: 'GET',
-          headers: {'Content-Type': 'application/json', 'X-Auth': token},
-        })
-          .then((response) => response.json())
-          .then((response) => {
-            this.checkDevicesList(
-              userData,
-              notificationToken,
-              response._embedded.devices,
-            );
-          });
-      } catch {
+      fetch(userData._links.devices.href, {
+        method: 'GET',
+        headers: {'Content-Type': 'application/json', 'X-Auth': token},
+      })
+      .then((response) => response.json())
+      .then((response) => {
+        console.warn(response)
+        this.checkDevicesList(
+          userData,
+          notificationToken,
+          response._embedded.devices,
+        );
+      })
+      .catch(error => {
+        console.warn(error)
         this.setState({
           loginError:
             'Errore! Non sono riuscito a prendere la lista dei tuoi dispositivi',
         });
-      }
+      })
     } else {
       this.props.actions.userLogin(userData);
     }
@@ -71,6 +73,7 @@ class Login extends React.Component {
     const tokenExists = devicesList.find(
       (device) => device.deviceToken === notificationToken,
     );
+    console.warn("tokenExists? " + tokenExists)
 
     if (tokenExists) {
       this.props.actions.userLogin(userData);
@@ -80,33 +83,34 @@ class Login extends React.Component {
   }
 
   async addNewDevice(userData, notificationToken) {
+    console.warn("adding new device")
     const device = {
       deviceToken: notificationToken,
+      platform: Platform.OS,
       make: DeviceInfo.getBrand(),
       build: DeviceInfo.getVersion(),
       deviceName: DeviceInfo.getDeviceNameSync(),
       owner: userData._links.self.href,
     };
-    //console.log(JSON.stringify(device, null, 2));
     var token = await TokenManager.getInstance().getToken();
     fetch(config.API_URL + '/devices', {
       method: 'POST',
       headers: {'Content-Type': 'application/json', 'X-Auth': token},
       body: JSON.stringify(device),
     })
-      .then((response) => {
-        this.props.actions.userLogin(userData);
-      })
-      .catch((error) => {
-        console.warn(error);
-        this.setState({
-          loginError: 'Errore! Non sono riuscito a salvare il tuo dispositivo',
-        });
+    .then((response) => {
+      console.warn(response)
+      this.props.actions.userLogin(userData);
+    })
+    .catch((error) => {
+      console.warn(error)
+      this.setState({
+        loginError: 'Errore! Non sono riuscito a salvare il tuo dispositivo',
       });
+    });
   }
 
   async getNotificationToken() {
-    //await messaging().registerDeviceForRemoteMessages()
     if (Platform.OS === 'android') {
       return await messaging().getToken();
     } else if (Platform.OS === 'ios') {
@@ -181,8 +185,8 @@ class Login extends React.Component {
               return e.json()
             })
             .then((localUser) => {
-              // this.checkUserDevices({
-              this.props.actions.userLogin({
+              // this.props.actions.userLogin({
+              return this.checkUserDevices({
                 ...user,
                 ...localUser,
               });
