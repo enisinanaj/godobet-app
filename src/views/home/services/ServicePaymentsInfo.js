@@ -18,7 +18,7 @@ class ServicePaymentsInfo extends React.Component {
     this.tabPressListener = this.props.navigation.addListener('focus', (e) => {
       this.props.route.params.changeDetailsOnTabPress('Pagamenti');
     });
-    //console.log(this.props.route.params);
+    console.warn(this.props.route.params.subscriptionData)
   }
 
   componentWillUnmount() {
@@ -29,7 +29,7 @@ class ServicePaymentsInfo extends React.Component {
 
   getDataScadenza() {
     const ultimoPagamento = moment(
-      this.props.route.params.subscriptionData.lastCharge,
+      this.props.route.params.subscriptionData.subscribedOn,
     );
     return ultimoPagamento.add(
       this.props.route.params.serviceData.duration,
@@ -47,48 +47,52 @@ class ServicePaymentsInfo extends React.Component {
     return (
       <View style={{...styles.container, padding: 30}}>
         <View style={styles.cardPaymentsInfo}>
-          <Text style={styles.text18}>Ultimo pagamento</Text>
+          <Text style={styles.text18}>Ultima iscrizione</Text>
           <Text style={{...styles.text18, fontWeight: 'bold'}}>
-            {moment(this.props.route.params.subscriptionData.lastCharge).format(
-              'DD-MM-YYYY HH:mm',
-            )}
-            <Text style={{fontWeight: 'normal'}}>
-              {' - '}
-              {moment(
-                this.props.route.params.subscriptionData.lastCharge,
-              ).fromNow()}
-            </Text>
+            {moment(this.props.route.params.subscriptionData.subscribedOn).calendar() + '\n'}
+            {this.props.route.params.serviceData.free ? "Gratis" : 
+            (this.props.route.params.serviceData.price/100).toLocaleString("it-IT", {maximumFractionDigits: 2, minimumFractionDigits: 2}) + '€'}
           </Text>
         </View>
         <View style={styles.cardPaymentsInfo}>
           <Text style={styles.text18}>Scadenza</Text>
           <Text style={{...styles.text18, fontWeight: 'bold'}}>
-            {moment(this.getDataScadenza()).format('DD-MM-YYYY HH:mm')}
+            {moment(this.getDataScadenza()).locale('it-IT').format('DD MMM YY')}
             <Text style={{fontSize: 18, fontWeight: 'normal'}}>
               {' - '}
-              {moment(this.getDataScadenza()).fromNow()}
+              {moment(this.getDataScadenza()).locale('it-IT').fromNow()}
             </Text>
           </Text>
 
           <View style={{flexDirection: 'row', marginTop: 10}}>
             <View
               style={{
-                flex:1,
-                height: 15,
-                borderTopLeftRadius: 7,
-                borderBottomLeftRadius: 7,
-                backgroundColor: styles.primaryColor.color,
-              }}
-            />
-            <View
-              style={{
                 flex: 1,
+                flexDirection: 'row',
                 height: 15,
                 borderTopRightRadius: 7,
                 borderBottomRightRadius: 7,
-                backgroundColor: styles.primaryColorTransparency.color,
+                borderTopLeftRadius: 7,
+                borderBottomLeftRadius: 7,
+                backgroundColor: (this.props.route.params.subscriptionData.remainingDays / this.props.route.params.subscriptionData.service.duration) > 0.5 
+                  ? styles.primaryColorTransparency.color
+                  : '#300',
               }}
-            />
+            >
+              <View
+                style={{
+                  flex: (this.props.route.params.subscriptionData.remainingDays / this.props.route.params.subscriptionData.service.duration),
+                  height: 15,
+                  borderTopRightRadius: 7,
+                  borderBottomRightRadius: 7,
+                  borderTopLeftRadius: 7,
+                  borderBottomLeftRadius: 7,
+                  backgroundColor: (this.props.route.params.subscriptionData.remainingDays / this.props.route.params.subscriptionData.service.duration) > 0.5 ?
+                    styles.primaryColor.color
+                    : '#800',
+                }}
+              />
+            </View>
           </View>
         </View>
       </View>

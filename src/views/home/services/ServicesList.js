@@ -3,7 +3,6 @@ import {
   View,
   Text,
   FlatList,
-  StyleSheet,
 } from 'react-native';
 import ServiceCard from './ServiceCard';
 import {lightStyles, darkStyles} from '../../../components/Styles';
@@ -15,17 +14,28 @@ class PoolStories extends React.Component {
     <ServiceCard
       key={index}
       serviceData={item}
-      addPoolsToState={(pools) => this.props.addPoolsToState(pools)}
     />
   );
 
-  listEmptyRenderItem = ({item}) => (
-    <View>
-      <ServiceCard key={1} />
-      <ServiceCard key={2} />
-      <ServiceCard key={3} />
-    </View>
-  );
+  listEmptyRenderItem = ({item}) => {
+    if (!this.props.loaded) {
+      return (<View>
+        <ServiceCard key={1} />
+        <ServiceCard key={2} />
+        <ServiceCard key={3} />
+      </View>)
+    } else {
+      return (<View>
+        <Text style={{
+            fontSize: 20,
+            color: '#efefef',
+            fontWeight: 'bold',
+            margin: 30,
+            marginVertical: 15,
+          }}>Non hai ancora nessun abbonamento.</Text>
+      </View>)
+    }
+  };
 
   render() {
     const styles =
@@ -43,27 +53,11 @@ class PoolStories extends React.Component {
           I tuoi pacchetti
         </Text>
         <FlatList
-          data={this.props.subscriptions.filter(sub => sub.valid && !sub.expired)}
+          data={this.props.subscriptions}
           renderItem={this.renderItem}
           ListEmptyComponent={this.listEmptyRenderItem}
           keyExtractor={(item, index) => String(index)}
         />
-        {/* <Text
-          style={{
-            fontSize: 20,
-            color: '#555',
-            fontWeight: 'bold',
-            margin: 30,
-            marginVertical: 15,
-          }}>
-          Servizi scaduti
-        </Text>
-        <FlatList
-          data={this.props.subscriptions.filter(sub => !sub.valid || sub.expired)}
-          renderItem={this.renderItem}
-          ListEmptyComponent={this.listEmptyRenderItem}
-          keyExtractor={(item, index) => String(index)}
-        />*/}
       </View>
     );
   }

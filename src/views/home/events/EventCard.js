@@ -2,18 +2,13 @@ import React from 'react';
 import {
   View,
   Text,
-  Appearance,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  ActivityIndicator,
 } from 'react-native';
-import {Icon} from 'react-native-elements';
 import {lightStyles, darkStyles} from '../../../components/Styles';
+import Sports from '../../../components/Sports';
 import moment from 'moment';
 import 'moment/locale/it';
 import ContentLoader, {Rect} from 'react-content-loader/native';
-
+import {Icon} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../../store/actions/actions';
@@ -46,33 +41,56 @@ class EventCard extends React.Component {
               justifyContent: 'space-between',
             }}>
             <View style={{flexDirection: 'column', flex: 1}}>
-              <Text style={styles.text16}>
+              <Text style={{...styles.text16, marginTop: 10}}>
                 {moment(this.props.eventData.eventDate)
                   .format('DD MMM HH:mm')
                   .toUpperCase()}
                 {'  '}
-                {this.props.eventData.sport} -{' '}
+                {Sports.find(s => s.value === this.props.eventData.sport)?.icon}
+                {'  '}
                 {this.props.eventData.competition}
               </Text>
-              <Text style={{...styles.text16, ...styles.bold}}>
+              <Text style={{...styles.text16, ...styles.bold, marginTop: 5}}>
                 {this.props.eventData.event}
               </Text>
-              <Text style={styles.text16}>
-                Proposta:{' '}
-                <Text style={styles.bold}>{this.props.eventData.proposal}</Text>
-              </Text>
+              <View style={{flexDirection: 'row', marginTop: 5}}>
+                <Icon
+                  style={{marginRight: 5}}
+                  name="play-outline"
+                  type="ionicon"
+                  size={16}
+                  color={styles.icon.color}
+                />
+                <Text style={styles.text16}>
+                  <Text style={styles.bold}>{this.props.eventData.proposal}</Text>
+                </Text>
+              </View>
               {this.props.eventData.notes !== '' && (
                 <Text style={styles.text16}>{this.props.eventData.notes}</Text>
               )}
             </View>
-            <Text
+            <View
               style={{
                 ...styles.text16,
                 ...styles.bold,
                 ...styles.bottomRightText,
+                marginTop: 10
               }}>
-              {this.props.eventData.quote}
-            </Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Icon
+                    name="at-outline"
+                    type="ionicon"
+                    size={16}
+                    color={styles.icon.color}
+                  />
+                  <Text style={{...styles.text16, ...styles.bold, marginLeft: 5}}>
+                    Quota
+                  </Text>
+                </View>
+                <Text style={{...styles.text16, textAlign: 'right', marginTop: 5}}>
+                    {(this.props.eventData.quote/100).toLocaleString("it-IT", {maximumFractionDigits: 2, minimumFractionDigits: 2})}
+                </Text>
+            </View>
           </View>
         </View>
       );

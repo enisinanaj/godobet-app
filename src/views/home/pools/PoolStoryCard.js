@@ -3,6 +3,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import {lightStyles, darkStyles} from '../../../components/Styles';
 import ContentLoader, {Rect} from 'react-content-loader/native';
@@ -26,12 +27,12 @@ class PoolStoryCard extends React.Component {
   }
 
   setPoolLoaded() {
+    console.warn(this.props.poolData)
     this.setState({loading: false});
   }
 
   render() {
-    const styles =
-      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+    const styles = darkStyles;
     if (this.state.loading)
       return (
         <View style={styles.storiesCardContainer}>
@@ -60,40 +61,95 @@ class PoolStoryCard extends React.Component {
           style={{
             ...styles.storiesCardContainer,
             alignItems: 'center',
-            borderBottomWidth: 1,
-            borderColor: styles.primaryColor.color,
+            borderWidth: 0.5,
+            borderColor: this.props.poolData.type === 'ongoing' ? styles.primaryColor.color : '#CCC',
           }}
           onPress={() =>
-            HomeStackRef.getRef().navigate('PoolDetails', {
-              //poolUrl: 'https://godobet-api.herokuapp.com/pools/19',
-              poolData: this.props.poolData,
-            })
+            HomeStackRef.getRef().navigate('PoolDetails', {poolData: this.props.poolData})
           }>
-          <Text
-            style={{
-              textAlign: 'center',
-              ...styles.text14,
-              marginBottom: -5,
-            }}>
-            Quota
-          </Text>
-          <Text
-            style={{
-              width: '100%',
-              textAlign: 'center',
-              ...styles.text18,
-              fontWeight: 'bold',
-              paddingBottom: 5,
-            }}>
-            {this.props.poolData.quote}€
-          </Text>
-          <Text style={styles.text16}>
-            {this.props.poolData.events.length > 1 ? 'multipla' : 'singola'}
-          </Text>
+          {
+            this.props.poolData.events.map(e => {
+              return (      
+                <View style={{flex: 1}}>
+                  <Text style={localStyles.competition}>
+                    {e.competition}
+                  </Text>
+                  <Text style={localStyles.event}>
+                    {e.event}
+                  </Text>
+                </View>
+              )
+            })
+          }
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 8}}>
+            <View style={{flex: 1}}>
+              <Text style={localStyles.labelTitle} >
+                QUOTA
+              </Text>
+              <Text style={localStyles.smallValue}>
+                {this.props.poolData.totalQuote.toLocaleString("it-IT", {maximumFractionDigits: 2, minimumFractionDigits: 2})}
+              </Text>
+            </View>
+            <View style={{flex: 1}}>
+              <Text style={localStyles.labelTitle} >
+                STAKE
+              </Text>
+              <Text style={localStyles.smallValue}>
+                {(this.props.poolData.stake/100).toLocaleString("it-IT", {maximumFractionDigits: 2, minimumFractionDigits: 2})}%
+              </Text>
+            </View>
+            {this.props.poolData.events.length == 1 && <View style={{flex: 1}}>
+              <Text style={localStyles.labelTitle} >
+                PROPOSTA
+              </Text>
+              <Text style={localStyles.smallValue}>
+                {this.props.poolData.events[0].proposal}
+              </Text>
+            </View>}
+            {this.props.poolData.events.length > 1 && <View style={{flex: 1}}>
+              <Text style={localStyles.labelTitle} >
+              </Text>
+              <Text style={localStyles.smallValue}>
+                MULTIPLA
+              </Text>
+            </View>}
+          </View>
         </TouchableOpacity>
       );
   }
 }
+
+const localStyles = StyleSheet.create({
+  competition: {
+    width: 130,
+    textAlign: 'left',
+    ...darkStyles.text14,
+    fontWeight: 'bold',
+    paddingBottom: 5,
+  },
+
+  event: {
+    width: 130,
+    textAlign: 'left',
+    ...darkStyles.text14,
+    fontWeight: 'bold',
+    paddingBottom: 5,
+  },
+
+  labelTitle: {
+    textAlign: 'left',
+    ...darkStyles.text9,
+    marginBottom: 2,
+  },
+
+  smallValue: {
+    width: '100%',
+    textAlign: 'left',
+    ...darkStyles.text14,
+    fontWeight: 'bold',
+    paddingBottom: 5,
+  }
+})
 
 const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => ({

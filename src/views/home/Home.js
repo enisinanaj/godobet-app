@@ -12,6 +12,29 @@ import ServicesList from './services/ServicesList';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../store/actions/actions';
+import config from '../../store/config';
+
+const loadAllPools = (url, args = {}) => {
+  return TokenManager.getInstance()
+    .getToken()
+    .then((jwt) => {
+      return fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth": jwt,
+        },
+        ...args,
+      })
+        .then((e) => e.json())
+        .then((json) =>
+          json._embedded && json._embedded.pools
+            ? json._embedded.pools
+            : json._embedded && json._embedded.playedPools
+            ? json._embedded.playedPools
+            : []
+        );
+    });
+};
 
 class Home extends React.Component {
   state = {
@@ -62,11 +85,6 @@ class Home extends React.Component {
       }
   }
 
-  addPoolsToState(pools) {
-    let joinedPools = [...this.state.pools, ...pools];
-    this.setState({pools: joinedPools});
-  }
-
   async getMySubscriptions() {
     var token = await TokenManager.getInstance().getToken();
     this.setState(
@@ -82,7 +100,7 @@ class Home extends React.Component {
               this.setState({
                 loading: false,
                 noErrors: true,
-                subscriptions: response._embedded.subscriptions,
+                subscriptions: response._embedded.subscriptions.filter(sub => sub.valid && !sub.expired && sub.paymentSystemToken !== 'self'),
               });
             }
           })
@@ -96,10 +114,10 @@ class Home extends React.Component {
       this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
     return (
       <View style={styles.container}>
-        <PoolStories pools={this.state.pools} />
+        <PoolStories pools={this.state.ongoingPools} />
         <ServicesList
           subscriptions={this.state.subscriptions}
-          addPoolsToState={(pools) => this.addPoolsToState(pools)}
+          loaded={!this.state.loading}
         />
       </View>
     );

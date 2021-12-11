@@ -5,18 +5,25 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
-import {lightStyles, darkStyles} from '../../../components/Styles';
+import {darkStyles} from '../../../components/Styles';
 import PoolCard from './PoolCard';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../../store/actions/actions';
+import TokenManager from '../../../components/auth/TokenManager';
+import config from '../../../store/config';
 
 class PoolsList extends React.Component {
+  state = {
+    pools: [],
+  };
+
   componentDidMount() {
     this.tabPressListener = this.props.navigation.addListener('focus', (e) => {
       this.props.route.params.changeDetailsOnTabPress('Schedine');
     });
+    this.loadAllPools();
   }
 
   componentWillUnmount() {
@@ -25,16 +32,36 @@ class PoolsList extends React.Component {
     }
   }
 
+  callUrl(url) {
+    return TokenManager.getInstance().getToken().then(jwt => {
+      return fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth": jwt,
+        },
+      })
+    });
+  };
+
+  loadAllPools() {
+    this.callUrl(config.API_URL + '/services/' + this.props.route.params.serviceData.id + '/pools')
+      .then(e => e.json()
+      .then(pools => {
+        let last30dPools = pools._embedded.pools.filter(p => (new Date() - new Date(p.updatedOn)) <= (30 * 24 * 60 * 60 * 1000))
+        this.setState({pools: last30dPools.sort((a,b) => b.createdOn - a.createdOn)});
+      }))
+  };
+
   renderItem = ({item, index}) => <PoolCard key={index} poolData={item} />;
+
   render() {
-    const styles =
-      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+    const styles = darkStyles;
     return (
       <View style={{...styles.container, paddingTop: 30}}>
-        {this.props.route.params.pools ? (
+        {this.state.pools ? (
           <View>
             <FlatList
-              data={this.props.route.params.pools}
+              data={this.state.pools}
               renderItem={this.renderItem}
               keyExtractor={(item, index) => String(index)}
             />

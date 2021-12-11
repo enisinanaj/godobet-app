@@ -2,17 +2,11 @@ import React from 'react';
 import {
   View,
   Text,
-  Appearance,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
-  ActivityIndicator,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
-import config from '../../../store/config';
 import {lightStyles, darkStyles} from '../../../components/Styles';
-import TokenManager from '../../../components/auth/TokenManager';
-import ContentLoader, {Rect} from 'react-content-loader/native';
 import HomeStackRef from '../../../components/HomeStackRef';
 
 import {connect} from 'react-redux';
@@ -23,9 +17,11 @@ class PoolCard extends React.Component {
   componentDidMount() {
     //console.log(JSON.stringify(this.props.poolData, null, 2));
   }
+
   render() {
-    const styles =
-      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+    const styles = darkStyles;
+    const pool = this.props.poolData;
+
     return (
       <TouchableOpacity
         style={styles.serviceCardContainer}
@@ -34,111 +30,187 @@ class PoolCard extends React.Component {
             poolData: this.props.poolData,
           })
         }>
-        <View
-          style={{
-            flexDirection: 'row',
-            paddingBottom: 10,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-          <Text
-            style={{
-              ...styles.text20,
-              fontWeight: 'bold',
-            }}>
-            {this.props.poolData.description}
-          </Text>
-          <Icon name="arrow-forward" type="ionicon" color={styles.icon.color} />
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingTop: 5,
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-          }}>
-          <View style={{flexDirection: 'row'}}>
-            <Icon
-              name="analytics-outline"
-              type="ionicon"
-              color={styles.icon.color}
-            />
-            <Text style={{...styles.text18, marginLeft: 10}}>
-              Quota:{' '}
-              <Text style={styles.bold}>{this.props.poolData.quote}€</Text>
-            </Text>
+        <View>
+          <Text style={styles.title}>{pool.description}</Text>
+          <View style={localStyles.mainInfoItems}>
+            <View style={localStyles.col}>
+              <View style={localStyles.row}>
+                <Icon name="book-outline" size={18} type="ionicon" color={styles.icon.color} />
+                <Text style={localStyles.label}>
+                  BOOKMAKER
+                </Text>
+              </View>
+              <Text style={localStyles.value}>
+                {pool.bookmaker}
+              </Text>
+            </View>
+            <View style={localStyles.col}>
+              <View style={localStyles.row}>
+                <Icon
+                  name="pie-chart-outline"
+                  type="ionicon"
+                  size={18}
+                  color={styles.icon.color}
+                />
+                <Text style={localStyles.label}>
+                  STAKE
+                </Text>
+              </View>
+              <Text style={localStyles.value}>
+                {(pool.stake/100).toLocaleString("it-IT", {maximumFractionDigits: 2, minimumFractionDigits: 2})}%
+              </Text>
+            </View>
+            <View style={localStyles.col}>
+              <View style={localStyles.row}>
+                <Icon
+                  name="at-outline"
+                  type="ionicon"
+                  size={18}
+                  color={styles.icon.color}
+                />
+                <Text style={localStyles.label}>
+                  QUOTA
+                </Text>
+              </View>
+              <Text style={[localStyles.value, {textAlign: 'right'}]}>
+                  {pool.totalQuote.toLocaleString("it-IT", {maximumFractionDigits: 2, minimumFractionDigits: 2})}
+              </Text>
+            </View>
           </View>
-          <View style={{flexDirection: 'row'}}>
-            <Icon
-              name="pie-chart-outline"
-              type="ionicon"
-              color={styles.icon.color}
-            />
-            <Text style={{...styles.text18, marginLeft: 10}}>
-              Stake:{' '}
-              <Text style={styles.bold}>{this.props.poolData.stake}</Text>
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{flexDirection: 'row', alignItems: 'center', paddingTop: 5}}>
-          <Icon name="list-outline" type="ionicon" color={styles.icon.color} />
-          <Text style={{...styles.text18, marginLeft: 10}}>
-            {this.props.poolData.events.length}{' '}
-            {this.props.poolData.events.length === 1 ? 'evento' : 'eventi'}
+          <Text style={[localStyles.label, {marginTop: 5, marginLeft: 0}]}>
+            EVENTI
           </Text>
+          {
+            this.props.poolData.events.map(e => {
+              return (      
+                <View style={localStyles.eventRow}>
+                  <View style={{flex: 1}}>
+                    <Text style={localStyles.competition}>
+                      {e.competition}
+                    </Text>
+                    <Text style={localStyles.event}>
+                      {e.event}
+                    </Text>
+                  </View>
+                  <View style={{flexDirection: 'row', justifyContent: 'flex-start', marginTop: 8}}>
+                    <View>
+                      <Text style={localStyles.labelTitle} >
+                        QUOTA
+                      </Text>
+                      <Text style={localStyles.smallValue}>
+                        {(e.quote/100).toLocaleString("it-IT", {maximumFractionDigits: 2, minimumFractionDigits: 2})}
+                      </Text>
+                    </View>
+                    <View style={{marginLeft: 10}}>
+                      <Text style={localStyles.labelTitle} >
+                        PROPOSTA
+                      </Text>
+                      <Text style={localStyles.smallValue}>
+                        {e.proposal}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              )
+            })
+          }
         </View>
       </TouchableOpacity>
     );
   }
 }
 
-const styles2 = StyleSheet.create({
-  headerImage: {width: 180, height: 40},
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    marginBottom: 30,
-    padding: 15,
-    marginHorizontal: 30,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
-  },
-  inputContainer: {
+const localStyles = StyleSheet.create({
+  mainInfoItems: {
     flexDirection: 'row',
-    marginTop: 30,
-    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    borderWidth: 0.5,
-    borderColor: '#AAA',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    marginBottom: 10
   },
-  inputStyle: {
-    flex: 1,
-    height: 60,
-    padding: 15,
-    paddingRight: 0,
-    fontSize: 18,
+
+  label: {
+    ...darkStyles.text14, 
+    ...darkStyles.bold, 
+    marginLeft: 5
+  },
+
+  value: {
+    ...darkStyles.text18,
+    marginTop: 5
+  },
+
+  col: {
+    flexDirection: 'column'
+  },
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+
+  serviceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    marginTop: 15
+  },
+
+  paddedRow: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+    paddingBottom: 5
+  },
+
+  votingContainer: {
+    ...darkStyles.poolDetails,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    flexDirection: 'row',
     justifyContent: 'center',
+    flexWrap: 'wrap',
+    paddingTop: 0,
+    paddingBottom: 25,
+    marginTop: 5
+  },
+
+  competition: {
+    textAlign: 'left',
+    ...darkStyles.text14,
+    fontWeight: 'bold',
+    paddingBottom: 5,
+  },
+
+  event: {
+    textAlign: 'left',
+    ...darkStyles.text14,
     fontWeight: 'bold',
   },
-  buttonStyle: {
-    width: '100%',
-    height: 60,
-    marginTop: 30,
-    backgroundColor: '#24A0ED',
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+
+  eventRow: {
+    paddingVertical: 5,
+    marginTop: 10,
+    borderLeftWidth: 2,
+    borderLeftColor: darkStyles.primaryColorTransparency.color,
+    paddingLeft: 10
   },
-  iconViewStyle: {margin: 15},
-});
+
+  labelTitle: {
+    textAlign: 'left',
+    ...darkStyles.text9,
+    marginBottom: 2,
+  },
+
+  smallValue: {
+    width: '100%',
+    textAlign: 'left',
+    ...darkStyles.text14,
+    fontWeight: 'bold',
+  }
+})
 
 const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => ({

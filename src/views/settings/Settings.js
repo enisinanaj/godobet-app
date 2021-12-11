@@ -70,7 +70,7 @@ class Settings extends React.Component {
     return (
       <View style={{...styles.container}}>
         <Text style={{...styles.menuText}}>Impostazioni</Text>
-        <View
+        {/* <View
           style={{
             ...styles.cardContainer,
             padding: 15,
@@ -126,7 +126,7 @@ class Settings extends React.Component {
               Scuro
             </MenuItem>
           </Menu>
-        </View>
+        </View> */}
         <TouchableOpacity
           style={{
             ...styles.cardContainer,

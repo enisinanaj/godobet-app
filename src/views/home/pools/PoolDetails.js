@@ -3,20 +3,30 @@ import {
   View,
   Text,
   FlatList,
-  Appearance,
   TouchableOpacity,
-  TextInput,
-  ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import TokenManager from '../../../components/auth/TokenManager';
-import ContentLoader, {Rect, Circle} from 'react-content-loader/native';
-import PoolCard from '../pools/PoolCard';
-import {lightStyles, darkStyles} from '../../../components/Styles';
+import ContentLoader, {Rect} from 'react-content-loader/native';
+import {darkStyles} from '../../../components/Styles';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../../store/actions/actions';
 import EventCard from '../events/EventCard';
+
+const buttonStyle = {
+  marginBotton: 30,
+  height: 30,
+  paddingHorizontal: 15,
+  paddingVertical: 5,
+  flexDirection: 'row',
+  borderBottomWidth: 0,
+  borderBottomColor: '#fff',
+  marginTop: 20,
+  marginBottom: 20,
+  marginHorizontal: 10
+}
 
 class PoolDetails extends React.Component {
   state = {
@@ -24,6 +34,7 @@ class PoolDetails extends React.Component {
     eventsLoading: true,
     pool: {},
     events: [],
+    motivationOpen: false
   };
   componentDidMount() {
     if (!this.props.route.params.poolData) {
@@ -108,101 +119,116 @@ class PoolDetails extends React.Component {
   );
 
   render() {
-    const styles =
-      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+    const styles = darkStyles;
     return (
       <View style={styles.container}>
-        <View style={styles.poolDetails}>
+        <View style={{...styles.poolDetails, paddingBottom: 5}}>
           {!this.state.loading ? (
             <View>
               <Text style={styles.title}>{this.state.pool.description}</Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                }}>
-                <View style={{flexDirection: 'column'}}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Icon
-                      name="book-outline"
-                      type="ionicon"
-                      color={styles.icon.color}
-                    />
-                    <Text style={{...styles.text18, marginLeft: 10}}>
-                      Bookmaker
+              <View style={localStyles.mainInfoItems}>
+                <View style={localStyles.col}>
+                  <View style={localStyles.row}>
+                    <Icon name="book-outline" size={18} type="ionicon" color={styles.icon.color} />
+                    <Text style={localStyles.label}>
+                      BOOKMAKER
                     </Text>
                   </View>
-                  <Text style={{...styles.text18, ...styles.bold}}>
+                  <Text style={localStyles.value}>
                     {this.state.pool.bookmaker}
                   </Text>
                 </View>
-                <View style={{flexDirection: 'column'}}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Icon
-                      name="analytics-outline"
-                      type="ionicon"
-                      color={styles.icon.color}
-                    />
-                    <Text style={{...styles.text18, marginLeft: 10}}>
-                      Quota
-                    </Text>
-                  </View>
-                  <Text
-                    style={{
-                      ...styles.text18,
-                      ...styles.bold,
-                      textAlign: 'right',
-                    }}>
-                    {this.state.pool.quote}
-                  </Text>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  marginTop: 15,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                }}>
-                <View style={{flexDirection: 'column'}}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={localStyles.col}>
+                  <View style={localStyles.row}>
                     <Icon
                       name="pie-chart-outline"
                       type="ionicon"
+                      size={18}
                       color={styles.icon.color}
                     />
-                    <Text style={{...styles.text18, marginLeft: 10}}>
-                      Stake
+                    <Text style={localStyles.label}>
+                      STAKE
                     </Text>
                   </View>
-                  <Text style={{...styles.text18, ...styles.bold}}>
-                    {this.state.pool.stake}
+                  <Text style={localStyles.value}>
+                    {(this.state.pool.stake/100).toLocaleString("it-IT", {maximumFractionDigits: 2, minimumFractionDigits: 2})}%
                   </Text>
                 </View>
-                <View style={{flexDirection: 'column'}}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={localStyles.col}>
+                  <View style={localStyles.row}>
                     <Icon
-                      name="trophy-outline"
+                      name="at-outline"
                       type="ionicon"
+                      size={18}
                       color={styles.icon.color}
                     />
-                    <Text style={{...styles.text18, marginLeft: 10}}>
-                      Profitto
+                    <Text style={localStyles.label}>
+                      QUOTA
                     </Text>
                   </View>
-                  <Text
-                    style={{
-                      ...styles.text18,
-                      ...styles.bold,
-                      textAlign: 'right',
-                    }}>
-                    {this.state.pool.profit}
+                  <Text style={[localStyles.value, {textAlign: 'right'}]}>
+                      {this.state.pool.totalQuote.toLocaleString("it-IT", {maximumFractionDigits: 2, minimumFractionDigits: 2})}
                   </Text>
                 </View>
+              </View>
+              <View
+                style={localStyles.serviceContainer}>
+                <View style={localStyles.col}>
+                  <View style={localStyles.row}>
+                    <Text style={{...styles.text14, ...styles.bold }}>
+                      SERVIZIO
+                    </Text>
+                  </View>
+                  <Text style={localStyles.value}>
+                    {this.state.pool.service.serviceName}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={localStyles.serviceContainer}>
+                {this.state.pool.motivation ? <View style={localStyles.col}>
+                  <View style={localStyles.paddedRow}>
+                    <Icon
+                      name="reorder-four-outline"
+                      type="ionicon"
+                      size={18}
+                      color={styles.icon.color}
+                    />
+                    <Text style={localStyles.label}>
+                      MOTIVAZIONE
+                    </Text>
+                  </View>
+                  
+                  {this.state.motivationOpen && <Text style={styles.text14}>
+                    {this.state.pool.motivation}
+                  </Text>}
+                  {this.state.pool.motivation && !this.state.motivationOpen && <Text 
+                    ellipsizeMode={'tail'} numberOfLines={5}
+                    style={{...styles.text14}}>
+                    {this.state.pool.motivation}
+                  </Text>}
+                  {this.state.motivationOpen && 
+                    <TouchableOpacity onPress={() => this.setState({motivationOpen: !this.state.motivationOpen})} 
+                      style={{padding: 10}}>
+                      <Icon
+                        size={16}
+                        name="chevron-up-circle-outline"
+                        type="ionicon"
+                        color={styles.icon.color}
+                      />
+                  </TouchableOpacity>}
+                  {this.state.pool.motivation && !this.state.motivationOpen && 
+                    <TouchableOpacity onPress={() => this.setState({motivationOpen: !this.state.motivationOpen})}
+                      style={{padding: 10}}>
+                      <Icon
+                        size={16}
+                        name="chevron-down-circle-outline"
+                        type="ionicon"
+                        color={styles.icon.color}
+                      />
+                  </TouchableOpacity>}
+                </View>
+                : null}
               </View>
             </View>
           ) : (
@@ -233,8 +259,8 @@ class PoolDetails extends React.Component {
                     justifyContent: 'space-between',
                     flexWrap: 'wrap',
                   }}>
-                  <View style={{flexDirection: 'column'}}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={localStyles.col}>
+                    <View style={localStyles.row}>
                       <Icon name="book-outline" type="ionicon" color="#555" />
                       <Text style={{...styles.text18, marginLeft: 10}}>
                         Bookmaker
@@ -242,8 +268,8 @@ class PoolDetails extends React.Component {
                     </View>
                     <Text style={{...styles.text18, ...styles.bold}}></Text>
                   </View>
-                  <View style={{flexDirection: 'column'}}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={localStyles.col}>
+                    <View style={localStyles.row}>
                       <Icon
                         name="analytics-outline"
                         type="ionicon"
@@ -270,8 +296,8 @@ class PoolDetails extends React.Component {
                     justifyContent: 'space-between',
                     flexWrap: 'wrap',
                   }}>
-                  <View style={{flexDirection: 'column'}}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={localStyles.col}>
+                    <View style={localStyles.row}>
                       <Icon
                         name="pie-chart-outline"
                         type="ionicon"
@@ -283,8 +309,8 @@ class PoolDetails extends React.Component {
                     </View>
                     <Text style={{...styles.text18, ...styles.bold}}></Text>
                   </View>
-                  <View style={{flexDirection: 'column'}}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={localStyles.col}>
+                    <View style={localStyles.row}>
                       <Icon name="trophy-outline" type="ionicon" color="#555" />
                       <Text style={{...styles.text18, marginLeft: 10}}>
                         Profitto
@@ -306,7 +332,7 @@ class PoolDetails extends React.Component {
           {!this.state.eventsLoading && this.state.events.length === 0 ? (
             <Text style={styles.menuText}>Nessun evento presente</Text>
           ) : (
-            <View>
+            <View style={{flex: 1}}>
               <Text style={styles.menuText}>Eventi</Text>
               <FlatList
                 data={this.state.events}
@@ -314,6 +340,29 @@ class PoolDetails extends React.Component {
                 ListEmptyComponent={this.renderEventLoadingItem}
                 keyExtractor={(item, index) => String(index)}
               />
+              {this.state.pool.type === 'ongoing' && <View
+                style={localStyles.votingContainer}>
+                <TouchableOpacity style={buttonStyle} >
+                  <Icon name="checkmark-outline"
+                    type="ionicon"
+                    size={18}
+                    color={'#FFF'}
+                    style={{marginRight: 5}} />
+                  <Text style={{...styles.text18, color: '#FFF', ...styles.bold}}>
+                    Segui
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={buttonStyle}>
+                  <Icon name="close-outline"
+                    type="ionicon"
+                    size={18}
+                    color={'#FFF'}
+                    style={{marginRight: 5}} />
+                  <Text style={{...styles.text18, color: '#FFF', ...styles.bold}}>
+                    Ignora
+                  </Text>
+                </TouchableOpacity>
+              </View>}
             </View>
           )}
         </View>
@@ -321,6 +370,63 @@ class PoolDetails extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  mainInfoItems: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+  },
+
+  label: {
+    ...darkStyles.text14, 
+    ...darkStyles.bold, 
+    marginLeft: 5
+  },
+
+  value: {
+    ...darkStyles.text18,
+    marginTop: 5
+  },
+
+  col: {
+    flexDirection: 'column'
+  },
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+
+  serviceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    marginTop: 15
+  },
+
+  paddedRow: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+    paddingBottom: 5
+  },
+
+  votingContainer: {
+    ...darkStyles.poolDetails,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    paddingTop: 0,
+    paddingBottom: 25,
+    marginTop: 5
+  }
+})
 
 const mapStateToProps = (state) => state;
 const mapDispatchToProps = (dispatch) => ({

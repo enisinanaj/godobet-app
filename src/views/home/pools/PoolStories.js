@@ -84,24 +84,23 @@ class PoolStories extends React.Component {
     playedPools
       .then((playedPools) => pools.then((pools) => [pools, playedPools]))
       .then((poolsSets) => {
-        console.warn(poolsStes)
         return poolsSets[0].filter(
           (pool) => !poolsSets[1].find((pp) => pp.references.pool === pool.id || pool.outcome)
         )
       })
-      .then((ongoingPools) => this.setState({ ongoingPools }));
+      .then((ongoingPools) => this.setState({ ongoingPools: ongoingPools.map(p => ({...p, type: 'ongoing'}))}));
 
     playedPools
       .then((playedPools) => {
         return pools.then((pools) => [pools, playedPools]);
       })
       .then((poolsSets) => {
-        this.getExpiredPoolsCards(pools, (pool) => poolsSets[1].find((pp) => pp.references.pool === pool.id) && !!pool.outcome)
-        .then((expiredPools) => {
-          if (expiredPools) {
-            this.setState({expiredPools})
-          }
-        });
+        // this.getExpiredPoolsCards(pools, (pool) => poolsSets[1].find((pp) => pp.references.pool === pool.id) && !!pool.outcome)
+        // .then((expiredPools) => {
+        //   if (expiredPools) {
+        //     this.setState({expiredPools: expiredPools.map(p => ({...p, type: 'expired'}))})
+        //   }
+        // });
 
         return poolsSets[0].filter((pool) =>
           poolsSets[1].find(
@@ -111,7 +110,7 @@ class PoolStories extends React.Component {
       })
       .then((filteredPools) => filteredPools.filter((p) => !p.outcome).sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn)))
       .then((followedPools) => {
-        this.setState({ followedPools })
+        this.setState({ followedPools: followedPools.map(p => ({...p, type: 'followed'})) })
       });
   }
 
@@ -161,7 +160,7 @@ class PoolStories extends React.Component {
           Le tue schedine
         </Text>
         <FlatList
-          data={this.props.ongoingPools}
+          data={[...this.state.ongoingPools, ...this.state.followedPools]}
           renderItem={this.renderItem}
           ListEmptyComponent={this.listEmptyRenderItem}
           horizontal
