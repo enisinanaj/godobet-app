@@ -62,6 +62,7 @@ class PoolStories extends React.Component {
       service: {},
       expiredPools: [],
       ongoingPools: [],
+      refreshing: false,
       followedPools: [],
     }
   }
@@ -78,8 +79,17 @@ class PoolStories extends React.Component {
   );
 
   componentDidMount() {
+    this.loadContent()
+
+    setInterval(() => this.loadContent(), 1000 * 20);
+  }
+
+  loadContent() {
+    console.warn("loading content")
     let pools = this.getMyPools();
     let playedPools = this.getPlayReference();
+
+    this.setState({refreshing: true});
 
     playedPools
       .then((playedPools) => pools.then((pools) => [pools, playedPools]))
@@ -88,20 +98,13 @@ class PoolStories extends React.Component {
           (pool) => !poolsSets[1].find((pp) => pp.references.pool === pool.id || pool.outcome)
         )
       })
-      .then((ongoingPools) => this.setState({ ongoingPools: ongoingPools.map(p => ({...p, type: 'ongoing'}))}));
+      .then((ongoingPools) => this.setState({ ongoingPools: ongoingPools.map(p => ({...p, type: 'ongoing'})).sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn))}));
 
     playedPools
       .then((playedPools) => {
         return pools.then((pools) => [pools, playedPools]);
       })
       .then((poolsSets) => {
-        // this.getExpiredPoolsCards(pools, (pool) => poolsSets[1].find((pp) => pp.references.pool === pool.id) && !!pool.outcome)
-        // .then((expiredPools) => {
-        //   if (expiredPools) {
-        //     this.setState({expiredPools: expiredPools.map(p => ({...p, type: 'expired'}))})
-        //   }
-        // });
-
         return poolsSets[0].filter((pool) =>
           poolsSets[1].find(
             (pp) => pp.references.pool === pool.id && pp.direction === FOLLOWED
@@ -110,6 +113,7 @@ class PoolStories extends React.Component {
       })
       .then((filteredPools) => filteredPools.filter((p) => !p.outcome).sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn)))
       .then((followedPools) => {
+        this.setState({refreshing: false});
         this.setState({ followedPools: followedPools.map(p => ({...p, type: 'followed'})) })
       });
   }

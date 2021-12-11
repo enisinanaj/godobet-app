@@ -14,6 +14,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../../store/actions/actions';
 import EventCard from '../events/EventCard';
+import config from '../../../store/config';
+import LottieView from 'lottie-react-native';
 
 const buttonStyle = {
   marginBotton: 30,
@@ -36,6 +38,7 @@ class PoolDetails extends React.Component {
     events: [],
     motivationOpen: false
   };
+
   componentDidMount() {
     if (!this.props.route.params.poolData) {
       if (this.props.route.params.poolUrl) {
@@ -46,11 +49,9 @@ class PoolDetails extends React.Component {
     } else {
       this.setPoolPropsToState();
     }
-    //console.log(JSON.stringify(this.props.route.params.poolData, null, 2));
   }
 
   setPoolPropsToState() {
-    //console.log(JSON.stringify(this.props.route.params.poolData, null, 2));
     this.setState({
       loading: false,
       eventsLoading: false,
@@ -83,6 +84,34 @@ class PoolDetails extends React.Component {
     });
   }
 
+  followTip() {
+    this.postFollow(config.API_URL + `/played-pools/${this.props.app.user.userCode}/${this.state.pool.id}`);
+  }
+
+  ignoreTip() {
+    this.postFollow(config.API_URL + `/unplayed-pools/${this.props.app.user.userCode}/${this.state.pool.id}`);
+  }
+
+  postFollow(url) {
+    return TokenManager.getInstance()
+      .getToken()
+      .then((jwt) => {
+        return fetch(url, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth": jwt,
+          },
+          method: "POST",
+        });
+      })
+      .then(() => {
+        this.setState({pool: {
+          ...this.state.pool,
+          type: 'followed'
+        }})
+      });
+  };
+
   async getEvents(url) {
     var token = await TokenManager.getInstance().getToken();
     this.setState({eventsLoading: true, eventsNoErrors: true}, () => {
@@ -108,6 +137,7 @@ class PoolDetails extends React.Component {
   }
 
   renderItem = ({item, index}) => <EventCard key={index} eventData={item} />;
+
   renderEventLoadingItem = ({item, index}) => (
     <View>
       <EventCard key={1} />
@@ -342,7 +372,7 @@ class PoolDetails extends React.Component {
               />
               {this.state.pool.type === 'ongoing' && <View
                 style={localStyles.votingContainer}>
-                <TouchableOpacity style={buttonStyle} >
+                <TouchableOpacity style={buttonStyle} onPress={() => this.followTip()} >
                   <Icon name="checkmark-outline"
                     type="ionicon"
                     size={18}
@@ -352,7 +382,7 @@ class PoolDetails extends React.Component {
                     Segui
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={buttonStyle}>
+                <TouchableOpacity style={buttonStyle} onPress={() => this.ignoreTip()}>
                   <Icon name="close-outline"
                     type="ionicon"
                     size={18}

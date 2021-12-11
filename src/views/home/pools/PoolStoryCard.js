@@ -27,7 +27,6 @@ class PoolStoryCard extends React.Component {
   }
 
   setPoolLoaded() {
-    console.warn(this.props.poolData)
     this.setState({loading: false});
   }
 
