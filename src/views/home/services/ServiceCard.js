@@ -2,11 +2,10 @@ import React from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
-import {lightStyles, darkStyles} from '../../../components/Styles';
+import {darkStyles} from '../../../components/Styles';
 import TokenManager from '../../../components/auth/TokenManager';
 import ContentLoader, {Rect, Circle} from 'react-content-loader/native';
 import HomeStackRef from '../../../components/HomeStackRef';
@@ -64,8 +63,7 @@ class ServiceCard extends React.Component {
   }
 
   render() {
-    const styles =
-      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+    const styles = darkStyles;
     if (this.state.loading)
       return (
         <View style={styles.serviceCardContainer}>

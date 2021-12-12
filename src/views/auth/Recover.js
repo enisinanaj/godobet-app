@@ -2,18 +2,14 @@ import React from 'react';
 import {
   View,
   Text,
-  Image,
-  StyleSheet,
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
   Alert,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
-import config from '../../store/config';
 import auth from '@react-native-firebase/auth';
-import TokenManager from '../../components/auth/TokenManager';
-import {lightStyles, darkStyles} from '../../components/Styles';
+import {darkStyles} from '../../components/Styles';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../store/actions/actions';
@@ -69,8 +65,7 @@ class Recover extends React.Component {
   }
 
   render() {
-    const styles =
-      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+    const styles = darkStyles;
     return (
       <View style={{...styles.container, padding: 30, alignItems: 'center'}}>
         <Text style={{...styles.text18, textAlign: 'center'}}>

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
-import {lightStyles, darkStyles} from '../../../components/Styles';
+import {darkStyles} from '../../../components/Styles';
 import HomeStackRef from '../../../components/HomeStackRef';
 
 import {connect} from 'react-redux';
@@ -88,7 +88,7 @@ class PoolCard extends React.Component {
           {
             this.props.poolData.events.map(e => {
               return (      
-                <View style={localStyles.eventRow}>
+                <View style={localStyles.eventRow} key={e.eventCode}>
                   <View style={{flex: 1}}>
                     <Text style={localStyles.competition}>
                       {e.competition}

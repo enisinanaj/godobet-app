@@ -6,13 +6,12 @@ import {
 import { normalizeUrl } from '../../components/Utils';
 import messaging from '@react-native-firebase/messaging';
 import TokenManager from '../../components/auth/TokenManager';
-import {lightStyles, darkStyles} from '../../components/Styles';
+import {darkStyles} from '../../components/Styles';
 import PoolStories from './pools/PoolStories';
 import ServicesList from './services/ServicesList';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../store/actions/actions';
-import config from '../../store/config';
 
 const loadAllPools = (url, args = {}) => {
   return TokenManager.getInstance()
@@ -110,8 +109,7 @@ class Home extends React.Component {
   }
 
   render() {
-    const styles =
-      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+    const styles = darkStyles;
     return (
       <View style={styles.container}>
         <PoolStories pools={this.state.ongoingPools} />

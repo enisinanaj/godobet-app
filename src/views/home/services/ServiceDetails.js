@@ -3,7 +3,6 @@ import {
   View,
   Text,
   LogBox,
-  Image,
   StyleSheet,
 } from 'react-native';
 import {Icon} from 'react-native-elements';

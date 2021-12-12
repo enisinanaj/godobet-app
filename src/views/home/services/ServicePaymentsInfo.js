@@ -8,7 +8,7 @@ import {
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../../store/actions/actions';
-import {lightStyles, darkStyles} from '../../../components/Styles';
+import {darkStyles} from '../../../components/Styles';
 import moment from 'moment';
 import 'moment/locale/it';
 moment.locale('it');
@@ -41,8 +41,7 @@ class ServicePaymentsInfo extends React.Component {
   }
 
   render() {
-    const styles =
-      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+    const styles = darkStyles;
     return (
       <View style={{...styles.container, padding: 30}}>
         <View style={styles.cardPaymentsInfo}>
@@ -56,10 +55,10 @@ class ServicePaymentsInfo extends React.Component {
         <View style={styles.cardPaymentsInfo}>
           <Text style={styles.text18}>Scadenza</Text>
           <Text style={{...styles.text18, fontWeight: 'bold'}}>
-            {moment(this.getDataScadenza()).locale('it-IT').format('DD MMM YY')}
+            {moment(this.getDataScadenza()).locale('it').format('DD MMM YY')}
             <Text style={{fontSize: 18, fontWeight: 'normal'}}>
               {' - '}
-              {moment(this.getDataScadenza()).locale('it-IT').fromNow()}
+              {moment(this.getDataScadenza()).locale('it').fromNow()}
             </Text>
           </Text>
 

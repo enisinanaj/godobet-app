@@ -2,8 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  Image,
-  StyleSheet,
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
@@ -14,7 +12,7 @@ import config from '../../store/config';
 import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import TokenManager from '../../components/auth/TokenManager';
-import {lightStyles, darkStyles} from '../../components/Styles';
+import {darkStyles} from '../../components/Styles';
 import DeviceInfo from 'react-native-device-info';
 
 import {connect} from 'react-redux';
@@ -41,7 +39,6 @@ class Login extends React.Component {
   async checkUserDevices(userData) {
     const gotPermission = await this.requestUserPermissionNotifications();
     if (gotPermission) {
-      console.warn('notification permissions: ' + gotPermission)
       const notificationToken = await this.getNotificationToken();
       var token = await TokenManager.getInstance().getToken();
       fetch(userData._links.devices.href, {
@@ -50,7 +47,6 @@ class Login extends React.Component {
       })
       .then((response) => response.json())
       .then((response) => {
-        console.warn(response)
         this.checkDevicesList(
           userData,
           notificationToken,
@@ -58,7 +54,6 @@ class Login extends React.Component {
         );
       })
       .catch(error => {
-        console.warn(error)
         this.setState({
           loginError:
             'Errore! Non sono riuscito a prendere la lista dei tuoi dispositivi',
@@ -73,17 +68,19 @@ class Login extends React.Component {
     const tokenExists = devicesList.find(
       (device) => device.deviceToken === notificationToken,
     );
-    console.warn("tokenExists? " + tokenExists)
+
+    console.warn(devicesList);
 
     if (tokenExists) {
       this.props.actions.userLogin(userData);
-    } else {
+    } else if (!tokenExists && devicesList && devicesList.length > 0) {
+      this.setState({loginError: "Questo account è già utilizzato su un'altro dispositivo.", loginLoading: false})
+    } else if (!tokenExists && (!devicesList || devicesList.length === 0)) {
       this.addNewDevice(userData, notificationToken);
     }
   }
 
   async addNewDevice(userData, notificationToken) {
-    console.warn("adding new device")
     const device = {
       deviceToken: notificationToken,
       platform: Platform.OS,
@@ -93,20 +90,25 @@ class Login extends React.Component {
       owner: userData._links.self.href,
     };
     var token = await TokenManager.getInstance().getToken();
+
+    console.warn(device);
+    console.warn(token);
+    console.warn(config.API_URL + "/devices")
+
     fetch(config.API_URL + '/devices', {
       method: 'POST',
       headers: {'Content-Type': 'application/json', 'X-Auth': token},
       body: JSON.stringify(device),
     })
+    .then((response) => response.json())
     .then((response) => {
-      console.warn(response)
-      this.props.actions.userLogin(userData);
+      this.props.actions.userLogin(userData)
     })
     .catch((error) => {
-      console.warn(error)
-      this.setState({
-        loginError: 'Errore! Non sono riuscito a salvare il tuo dispositivo',
-      });
+        this.setState({
+          loginLoading: false,
+          loginError: 'Errore! Non sono riuscito a salvare il tuo dispositivo',
+      })
     });
   }
 
@@ -199,8 +201,7 @@ class Login extends React.Component {
   };
 
   render() {
-    const styles =
-      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+    const styles = darkStyles;
     return (
       <View style={{...styles.container, padding: 30, alignItems: 'center'}}>
         <Text style={styles.text18}>Accedi a GodoBet</Text>

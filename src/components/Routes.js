@@ -7,8 +7,8 @@ import Home from '../views/home/Home';
 import ServiceDetails from '../views/home/services/ServiceDetails';
 import PoolDetails from '../views/home/pools/PoolDetails';
 import Settings from '../views/settings/Settings';
-import {lightStyles, darkStyles} from './Styles';
-import Menu, {MenuItem, MenuDivider} from 'react-native-material-menu';
+import {darkStyles} from './Styles';
+import Menu, {MenuItem} from 'react-native-material-menu';
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeStackRef from './HomeStackRef';
 
@@ -16,7 +16,7 @@ const LoginStack = createStackNavigator();
 const HomeStack = createStackNavigator();
 
 const Routes = ({props}) => {
-  const styles = props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+  const styles = darkStyles;
   if (!props.app.loggedIn) {
     return (
       <LoginStack.Navigator
@@ -29,11 +29,7 @@ const Routes = ({props}) => {
               <Image
                 style={{width: 160, height: 40}}
                 resizeMode="contain"
-                source={
-                  props.theme.currentTheme === 'dark'
-                    ? require('../../assets/images/godobet_logo_dark.png')
-                    : require('../../assets/images/godobet_logo.png')
-                }
+                source={require('../../assets/images/godobet_logo_dark.png')}
               />
             </View>
           ),
@@ -67,11 +63,7 @@ const Routes = ({props}) => {
               <Image
                 style={{width: 160, height: 40}}
                 resizeMode="contain"
-                source={
-                  props.theme.currentTheme === 'dark'
-                    ? require('../../assets/images/godobet_logo_dark.png')
-                    : require('../../assets/images/godobet_logo.png')
-                }
+                source={require('../../assets/images/godobet_logo_dark.png')}
               />
             </View>
           ),
@@ -83,12 +75,13 @@ const Routes = ({props}) => {
             headerRight: () => (
               <Menu
                 ref={setMenuRef}
-                style={{...styles.headerBackground, marginTop: 15}}
+                style={{...styles.headerBackground, marginTop: 10}}
                 button={
                   <TouchableOpacity style={{padding: 15}} onPress={showMenu}>
                     <Icon
                       name="ellipsis-vertical"
                       type="ionicon"
+                      size={15}
                       color={styles.icon.color}
                     />
                   </TouchableOpacity>

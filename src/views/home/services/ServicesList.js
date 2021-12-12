@@ -5,7 +5,7 @@ import {
   FlatList,
 } from 'react-native';
 import ServiceCard from './ServiceCard';
-import {lightStyles, darkStyles} from '../../../components/Styles';
+import {darkStyles} from '../../../components/Styles';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../../store/actions/actions';
@@ -38,8 +38,7 @@ class PoolStories extends React.Component {
   };
 
   render() {
-    const styles =
-      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+    const styles = darkStyles;
     return (
       <View style={styles.container}>
         <Text

@@ -7,8 +7,8 @@ import * as actions from './src/store/actions/actions';
 import {NavigationContainer} from '@react-navigation/native';
 import Routes from './src/components/Routes';
 import HomeStackRef from './src/components/HomeStackRef';
-import {Appearance, useColorScheme} from 'react-native-appearance';
-import {lightStyles, darkStyles} from './src/components/Styles';
+import {Appearance} from 'react-native-appearance';
+import {darkStyles} from './src/components/Styles';
 
 class App extends React.Component {
   componentDidMount() {
@@ -24,8 +24,7 @@ class App extends React.Component {
   }
 
   render() {
-    const styles =
-      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+    const styles = darkStyles;
     return (
       <NavigationContainer
         ref={(nav) => {
@@ -33,11 +32,7 @@ class App extends React.Component {
         }}>
         <StatusBar
           backgroundColor={styles.headerBackground.backgroundColor}
-          barStyle={
-            this.props.theme.currentTheme === 'dark'
-              ? 'light-content'
-              : 'dark-content'
-          }
+          barStyle={'light-content'}
         />
         <View style={styles.container}>
           <Routes props={this.props} />

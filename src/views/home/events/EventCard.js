@@ -3,7 +3,7 @@ import {
   View,
   Text,
 } from 'react-native';
-import {lightStyles, darkStyles} from '../../../components/Styles';
+import {darkStyles} from '../../../components/Styles';
 import Sports from '../../../components/Sports';
 import moment from 'moment';
 import 'moment/locale/it';
@@ -30,8 +30,7 @@ class EventCard extends React.Component {
     this.setState({loading: false});
   }
   render() {
-    const styles =
-      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+    const styles = darkStyles;
     if (!this.state.loading)
       return (
         <View style={styles.cardContainer}>

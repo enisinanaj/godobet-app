@@ -2,18 +2,11 @@ import React from 'react';
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   TouchableOpacity,
-  Picker,
-  ActivityIndicator,
 } from 'react-native';
-import {Icon} from 'react-native-elements';
-import config from '../../store/config';
 import auth from '@react-native-firebase/auth';
-import TokenManager from '../../components/auth/TokenManager';
-import Menu, {MenuItem, MenuDivider} from 'react-native-material-menu';
-import {lightStyles, darkStyles} from '../../components/Styles';
+import {darkStyles} from '../../components/Styles';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../store/actions/actions';
@@ -65,68 +58,10 @@ class Settings extends React.Component {
   }
 
   render() {
-    const styles =
-      this.props.theme.currentTheme === 'dark' ? darkStyles : lightStyles;
+    const styles = darkStyles;
     return (
       <View style={{...styles.container}}>
         <Text style={{...styles.menuText}}>Impostazioni</Text>
-        {/* <View
-          style={{
-            ...styles.cardContainer,
-            padding: 15,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <Text style={styles.text18}>Tema:</Text>
-          <Menu
-            ref={this.setMenuRef}
-            style={styles.headerBackground}
-            button={
-              <TouchableOpacity
-                style={{
-                  padding: 15,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}
-                onPress={this.showMenu}>
-                <Text
-                  style={{...styles.text18, ...styles.bold, marginRight: 10}}>
-                  {this.getThemeMode()}
-                </Text>
-                <Icon
-                  size={16}
-                  name="caret-down"
-                  type="ionicon"
-                  color={styles.icon.color}
-                />
-              </TouchableOpacity>
-            }>
-            <MenuItem
-              textStyle={styles.text18}
-              onPress={() => {
-                this.hideMenu();
-                this.setTheme('device');
-              }}>
-              Tema del telefono
-            </MenuItem>
-            <MenuItem
-              textStyle={styles.text18}
-              onPress={() => {
-                this.hideMenu();
-                this.setTheme('light');
-              }}>
-              Chiaro
-            </MenuItem>
-            <MenuItem
-              textStyle={styles.text18}
-              onPress={() => {
-                this.hideMenu();
-                this.setTheme('dark');
-              }}>
-              Scuro
-            </MenuItem>
-          </Menu>
-        </View> */}
         <TouchableOpacity
           style={{
             ...styles.cardContainer,
