@@ -23,8 +23,8 @@ import * as actions from '../../store/actions/actions';
 
 class Login extends React.Component {
   state = {
-    email: 'kconhe@gmail.com',
-    password: '12688ab:',
+    email: '',
+    password: '',
     loginLoading: false,
     loginError: '',
   };
