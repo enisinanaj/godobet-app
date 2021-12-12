@@ -38,15 +38,19 @@ class Login extends React.Component {
 
   async checkUserDevices(userData) {
     const gotPermission = await this.requestUserPermissionNotifications();
+    console.info("Permission is: " + gotPermission);
+    
     if (gotPermission) {
       const notificationToken = await this.getNotificationToken();
       var token = await TokenManager.getInstance().getToken();
+      console.info("Notification token is: " + token);
       fetch(userData._links.devices.href, {
         method: 'GET',
         headers: {'Content-Type': 'application/json', 'X-Auth': token},
       })
       .then((response) => response.json())
       .then((response) => {
+        console.info("User devices: " + JSON.stringify(gotPermission));
         this.checkDevicesList(
           userData,
           notificationToken,

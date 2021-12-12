@@ -37,6 +37,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>Aiutaci a migliroare il servizio abilitando l'invio degli errori a noi in automatico.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>UIAppFonts</key>
